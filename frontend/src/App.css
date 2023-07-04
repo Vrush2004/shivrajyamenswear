@@ -1,0 +1,129 @@
+
+
+/* ************** Tagline ************** */
+
+.typing-text {
+  color: var(--bhagwa-color);
+  font-family: 'Agdasima', sans-serif;
+}
+
+.typing-text:after {
+  content: '|';
+  animation: blinkCursor 0.7s infinite;
+}
+
+@keyframes blinkCursor {
+
+  from,
+  to {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ************** End Tagline ************** */
+
+/* ************** Navbar ************** */
+.logo {
+  width: 10rem;
+}
+
+.badge {
+  position: absolute;
+  background: var(--bhagwa-color);
+  color: #fff;
+  font-weight: 500;
+  height: 25px;
+  width: 25px;
+  border-radius: 100%;
+  letter-spacing: 0;
+  left: 10px;
+  top: -15px;
+  text-align: center;
+}
+
+.search-box:focus {
+  outline: none;
+  border-bottom: 3px solid var(--bhagwa-color) !important;
+}
+
+/* ************** End Navbar ************** */
+
+/* ************** Categories Component ************** */
+.hide-scrollbar {
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* Internet Explorer 10+ */
+  scrollbar-width: none;
+  /* Google Chrome and Safari */
+  -webkit-overflow-scrolling: touch;
+  /* iOS */
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+  /* Set a transparent background color */
+}
+
+.image-box {
+  background: linear-gradient(white, white) padding-box,
+    linear-gradient(to right, red, orange) border-box;
+  border-radius: 50%;
+  border: 2px solid transparent;
+}
+
+.category-wrapper {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.pixalated {
+  flex-shrink: 0;
+}
+
+.scroll-buttons {
+  width: 50px;
+  height: 50px;
+  background: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  border: 1px solid #e2e0e0;
+}
+
+.right-scroll {
+  position: absolute;
+  top: 35%;
+  left: 94%;
+}
+
+.left-scroll {
+  position: absolute;
+  top: 35%;
+  left: 2.5%;
+}
+
+/* ************** End Categories Component ************** */
+
+/* ************** Delivery features component ************** */
+
+.delivery-features {
+  /* background-color:rgb(255, 236, 200) ; */
+  background-color: #ecf0f1;
+}
+/* ************** End Delivery features component ************** */
+
+
+.fa {
+  background: #d6249f;
+  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+  /* -webkit-background-clip: text; */
+  -webkit-text-fill-color: transparent;
+}

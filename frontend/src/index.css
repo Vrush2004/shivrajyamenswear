@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Agdasima&family=Geologica:wght@300&family=Oswald&display=swap');
+
+/* font-family: 'Geologica', sans-serif; */
+/* font-family: 'Agdasima', sans-serif; */
+html {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    font-size: 16px;
+    font-family: 'Geologica', sans-serif;
+    --bhagwa-color: #ff8000;
+}
+
+.font-agdasima {
+    font-family: 'Agdasima', sans-serif;
+}
+
+.font-geolatica {
+    font-family: 'Geologica', sans-serif;
+}
+.bhagwa-color {
+    color: var(--bhagwa-color) !important;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
