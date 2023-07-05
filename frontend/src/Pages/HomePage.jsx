@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import BottomNav from "../components/General/BottomNav";
-import Navbar from "../components/General/Navbar";
 import Search from "../components/General/Search";
 import Tagline from "../components/General/Tagline";
 import Categories from "../components/Home/Categories";
@@ -11,47 +9,29 @@ import Instagram from "../components/Home/Instagram";
 import Contact from "../components/Home/Contact";
 import Footer from "../components/General/Footer";
 
-export default function HomePage() {
-  const [width, setWidth] = useState(window.innerWidth);
-
-  const handleSize = () => {
-    setWidth(window.innerWidth);
-  };
-
-  useEffect(() => {
-    window.addEventListener("resize", handleSize);
-
-    return () => {
-      window.removeEventListener("resize", handleSize);
-    };
-  }, []);
+export default function HomePage({currentWidth}) {
 
   return (
     <div>
-      <Tagline />
-      <Navbar />
-
-      {width < 640 &&
+      
+      {currentWidth < 640 &&
         <div>
           <Search />
-          <Banner width={width} />
+          <Banner width={currentWidth} />
           <Categories />
         </div>
       }
-      {width > 640 &&
+      {currentWidth > 640 &&
         <div>
           <Categories />
-          <Banner width={width} />
+          <Banner width={currentWidth} />
         </div>
       }
-      <DeliveryFeatures/>
-      <FeaturedProducts/>
-      <Instagram/>
-      <Contact/>
-      <Footer/>
-
-      {width < 640 && <BottomNav />}
-
+      <DeliveryFeatures />
+      <FeaturedProducts />
+      <Instagram />
+      <Contact />
+      <Footer />
 
     </div>
   );
