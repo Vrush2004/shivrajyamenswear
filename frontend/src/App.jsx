@@ -2,10 +2,10 @@ import HomePage from "./Pages/HomePage";
 import './App.css'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import ProductListPage from "./Pages/ProductListPage";
-import Navbar from "./components/General/Navbar";
 import BottomNav from "./components/General/BottomNav";
 import { useState,useEffect } from "react";
 import Tagline from "./components/General/Tagline";
+import Product_Navbar from "./components/General/Product_Navbar";
 
 export default function App() {
 
@@ -30,10 +30,10 @@ export default function App() {
     {
       location.pathname == '/' && <Tagline/>
     }
-    <Navbar/>
+    {/* <Product_Navbar/> */}
       <Routes>
         <Route exact path="/" element={<HomePage currentWidth={width} />}></Route>
-        <Route exact path="/product-list" element={<ProductListPage />}></Route>
+        <Route exact path="/products" element={<ProductListPage currentWidth={width} />}></Route>
       </Routes>
 
       {width < 640 && <BottomNav />}

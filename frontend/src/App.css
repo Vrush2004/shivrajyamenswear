@@ -34,6 +34,7 @@
 .badge {
   position: absolute;
   background: var(--bhagwa-color);
+  background-color: red;
   color: #fff;
   font-weight: 500;
   height: 25px;
@@ -43,6 +44,7 @@
   left: 10px;
   top: -15px;
   text-align: center;
+  vertical-align: middle;
 }
 
 .search-box:focus {
@@ -126,4 +128,7 @@
   background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+.discount-banner{
+  background-image: linear-gradient(to left top, #ffd202, #ffac32, #ff865b, #ff6983, #ff5ea7);
 }
