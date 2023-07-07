@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Disclosure } from '@headlessui/react'
 import { MinusIcon, PlusIcon } from '@heroicons/react/20/solid'
-import FeaturedProducts from "../Home/FeaturedProducts";
+import Allproducts from './Allproducts'
 
 const filters = [
   {
@@ -109,7 +109,7 @@ export default function ProductList() {
               {/* Product grid */}
               <div className="lg:col-span-3">
                 {/* Your content */}
-                <FeaturedProducts />
+                <Allproducts/>
               </div>
             </div>
           </section>

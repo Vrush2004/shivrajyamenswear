@@ -6,6 +6,7 @@ import BottomNav from "./components/General/BottomNav";
 import { useState,useEffect } from "react";
 import Tagline from "./components/General/Tagline";
 import Product_Navbar from "./components/General/Product_Navbar";
+import ProductDetails from "./components/Product/ProductDetails";
 
 export default function App() {
 
@@ -34,6 +35,7 @@ export default function App() {
       <Routes>
         <Route exact path="/" element={<HomePage currentWidth={width} />}></Route>
         <Route exact path="/products" element={<ProductListPage currentWidth={width} />}></Route>
+        <Route exact path="/products/men" element={<ProductDetails/>}></Route>
       </Routes>
 
       {width < 640 && <BottomNav />}
