@@ -6,6 +6,7 @@ import BottomNav from "./components/General/BottomNav";
 import { useState,useEffect } from "react";
 import Tagline from "./components/General/Tagline";
 import ProductDetailsPage from "./Pages/ProductDetailsPage";
+import CheckoutPage from "./Pages/CheckoutPage";
 
 export default function App() {
 
@@ -35,6 +36,7 @@ export default function App() {
         <Route exact path="/" element={<HomePage currentWidth={width} />}></Route>
         <Route exact path="/products" element={<ProductListPage currentWidth={width} />}></Route>
         <Route exact path="/products/men" element={<ProductDetailsPage currentWidth={width} />}></Route>
+        <Route exact path="/checkout" element={<CheckoutPage />}></Route>
       </Routes>
 
       {width < 640 && <BottomNav />}
