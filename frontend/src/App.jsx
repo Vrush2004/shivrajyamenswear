@@ -7,6 +7,7 @@ import { useState,useEffect } from "react";
 import Tagline from "./components/General/Tagline";
 import ProductDetailsPage from "./Pages/ProductDetailsPage";
 import CheckoutPage from "./Pages/CheckoutPage";
+import ScrollToTop from "./components/General/ScrollToTop";
 
 export default function App() {
 
@@ -31,6 +32,7 @@ export default function App() {
     {
       location.pathname == '/' && <Tagline/>
     }
+    <ScrollToTop/>
     {/* <Product_Navbar/> */}
       <Routes>
         <Route exact path="/" element={<HomePage currentWidth={width} />}></Route>
