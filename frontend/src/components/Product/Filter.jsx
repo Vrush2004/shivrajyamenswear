@@ -2,57 +2,125 @@ import { Fragment, useState } from 'react'
 import { Dialog, Disclosure, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { FunnelIcon, MinusIcon, PlusIcon } from '@heroicons/react/20/solid'
+import { useDispatch } from 'react-redux'
+import { fetchProductsByFiltersAsync, productCategory } from '../../Features/product/productSlice'
 
 const filters = [
     {
-      id: 'category',
-      name: 'Category',
-      options: [
-        { value: "Shirts", label: "Shirts", checked: true },
-        { value: "Jeans",label:"Jeans", checked: false },
-        { value: "T-Shirts", label: "T-shirt", checked: false },
-        { value: "SweatShirt", label: "SweatShirt", checked: false },
-        { value: "Accessories", label: "Accessories", checked: false },
-        { value: "Jacket", label: "Jacket", checked: false },
-        { value: "Shoes", label: "Shoes", checked: false },
-        { value: 'accessories', value: 'accessories', label: 'Accessories', checked: false },
-      ],
+        id: 'category',
+        name: 'Category',
+        options: [
+            { value: 'smartphones', label: 'smartphones', checked: false },
+            { value: 'laptops', label: 'laptops', checked: false },
+            { value: 'fragrances', label: 'fragrances', checked: false },
+            { value: 'skincare', label: 'skincare', checked: false },
+            { value: 'groceries', label: 'groceries', checked: false },
+            { value: 'home-decoration', label: 'home-decoration', checked: false }
+        ],
     },
     {
-      id: 'color',
-      name: 'Color',
-      options: [
-        { value: 'white', label: 'White', checked: false },
-        { value: 'beige', label: 'Beige', checked: false },
-        { value: 'blue', label: 'Blue', checked: true },
-      ],
+        id: 'color',
+        name: 'Color',
+        options: [
+            { value: 'white', label: 'White', checked: false },
+            { value: 'beige', label: 'Beige', checked: false },
+            { value: 'blue', label: 'Blue', checked: true },
+        ],
     },
     {
-      id: 'label',
-      name: 'Label',
-      options: [
-        { value: 'New Arrival', label: 'New Arrival', checked: false },
-        { value: 'Trending', label: 'Trending', checked: false },
-        { value: 'Best Seller', label: 'Best Seller', checked: true },
-      ],
+        id: 'label',
+        name: 'Label',
+        options: [
+            { value: 'New Arrival', label: 'New Arrival', checked: false },
+            { value: 'Trending', label: 'Trending', checked: false },
+            { value: 'Best Seller', label: 'Best Seller', checked: true },
+        ],
     },
-  
-    {
-      id: 'size',
-      name: 'Size',
-      options: [
-        { value: '18l', label: '18L', checked: false },
-        { value: '20l', label: '20L', checked: false },
-        { value: '40l', label: '40L', checked: true },
-      ],
-    },
-  ]
 
+    {
+        id: 'size',
+        name: 'Size',
+        options: [
+            { value: '18l', label: '18L', checked: false },
+            { value: '20l', label: '20L', checked: false },
+            { value: '40l', label: '40L', checked: true },
+        ],
+    },
+]
 const Filter = () => {
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+    const [filter, setFilter] = useState({});
+    const dispatch = useDispatch();
+
+    const handleFilter = (e, section, option) => {
+
+        const newFilter = { ...filter };
+
+        if (e.target.checked) {
+            newFilter[section.id] = option.value;
+            dispatch(productCategory(option.value))
+        } else {
+            delete newFilter[section.id];
+            dispatch(productCategory("All Products"))
+        }
+        setFilter(newFilter);
+
+        dispatch(fetchProductsByFiltersAsync(newFilter));
+        console.log(section.id, option.value);
+
+        setMobileFiltersOpen(false);
+    }
 
     return (
         <div>
+            {/* -- for big screens -- */}
+            <form className="hidden lg:block mt-10 fixed">
+                <h2 className="text-2xl md:text-3xl tracking-wider font-bold text-gray-900 text-center md:text-left mb-5 font-agdasima">Filters</h2>
+                {filters.map((section) => (
+                    <Disclosure as="div" key={section.id} className="border-b border-gray-200 py-6">
+                        {({ open }) => (
+                            <>
+                                <h3 className="-my-3 flow-root">
+                                    <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-lg text-gray-400 hover:text-gray-500">
+                                        <span className="font-medium text-gray-900">{section.name}</span>
+                                        <span className="ml-6 flex items-center text-gray-900">
+                                            {open ? (
+                                                <MinusIcon className="h-5 w-5 ml-32" aria-hidden="true" />
+                                            ) : (
+                                                <PlusIcon className="h-5 w-5 ml-32" aria-hidden="true" />
+                                            )}
+                                        </span>
+                                    </Disclosure.Button>
+                                </h3>
+                                <Disclosure.Panel className="pt-6">
+                                    <div className="space-y-4">
+                                        {section.options.map((option, optionIdx) => (
+                                            <div key={option.value} className="flex items-center">
+                                                <input
+                                                    id={`filter-${section.id}-${optionIdx}`}
+                                                    name={`${section.id}[]`}
+                                                    defaultValue={option.value}
+                                                    type="checkbox"
+                                                    defaultChecked={option.checked}
+                                                    onClick={(e) => handleFilter(e, section, option)}
+                                                    className="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500"
+                                                />
+                                                <label
+                                                    htmlFor={`filter-${section.id}-${optionIdx}`}
+                                                    className="ml-3 text-lg text-gray-600"
+                                                >
+                                                    {option.label}
+                                                </label>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </Disclosure.Panel>
+                            </>
+                        )}
+                    </Disclosure>
+                ))}
+            </form>
+
             {/* Mobile filter dialog */}
             <Transition.Root show={mobileFiltersOpen} as={Fragment}>
                 <Dialog as="div" className="relative z-40 lg:hidden" onClose={setMobileFiltersOpen}>
@@ -121,6 +189,7 @@ const Filter = () => {
                                                                         defaultValue={option.value}
                                                                         type="checkbox"
                                                                         defaultChecked={option.checked}
+                                                                        onClick={(e) => handleFilter(e, section, option)}
                                                                         className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                                                     />
                                                                     <label

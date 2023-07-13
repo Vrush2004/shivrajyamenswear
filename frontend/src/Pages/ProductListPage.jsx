@@ -18,7 +18,7 @@ const ProductListPage = ({ currentWidth }) => {
           <DiscountBanner/>
         </div>
       }
-      <ProductList />
+      <ProductList currentWidth={currentWidth} />
     </div>
   )
 }
