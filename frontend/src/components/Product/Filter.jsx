@@ -1,53 +1,45 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Disclosure, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { FunnelIcon, MinusIcon, PlusIcon } from '@heroicons/react/20/solid'
-import { useDispatch } from 'react-redux'
-import { fetchProductsByFiltersAsync, productCategory } from '../../Features/product/productSlice'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchProductsByFiltersAsync, productCategory,selectAllCategories,selectAllLabels,selectAllColors,selectAllSizes, fetchAllCategoriesAsync, fetchAllLabelsAsync, fetchAllColorsAsync, fetchAllSizesAsync } from '../../Features/product/productSlice'
 
-const filters = [
-    {
-        id: 'category',
-        name: 'Category',
-        options: [
-            { value: 'smartphones', label: 'smartphones', checked: false },
-            { value: 'laptops', label: 'laptops', checked: false },
-            { value: 'fragrances', label: 'fragrances', checked: false },
-            { value: 'skincare', label: 'skincare', checked: false },
-            { value: 'groceries', label: 'groceries', checked: false },
-            { value: 'home-decoration', label: 'home-decoration', checked: false }
-        ],
-    },
-    {
-        id: 'color',
-        name: 'Color',
-        options: [
-            { value: 'white', label: 'White', checked: false },
-            { value: 'beige', label: 'Beige', checked: false },
-            { value: 'blue', label: 'Blue', checked: true },
-        ],
-    },
-    {
-        id: 'label',
-        name: 'Label',
-        options: [
-            { value: 'New Arrival', label: 'New Arrival', checked: false },
-            { value: 'Trending', label: 'Trending', checked: false },
-            { value: 'Best Seller', label: 'Best Seller', checked: true },
-        ],
-    },
 
-    {
-        id: 'size',
-        name: 'Size',
-        options: [
-            { value: '18l', label: '18L', checked: false },
-            { value: '20l', label: '20L', checked: false },
-            { value: '40l', label: '40L', checked: true },
-        ],
-    },
-]
 const Filter = () => {
+    // select filter object states coming from API
+    const categories = useSelector(selectAllCategories);
+    const labels = useSelector(selectAllLabels);
+    const colors = useSelector(selectAllColors);
+    const sizes = useSelector(selectAllSizes);
+
+    // --------- filters ---------
+    const filters = [
+        {
+            id: 'category',
+            name: 'Category',
+            options: categories,
+        },
+        {
+            id: 'color',
+            name: 'Color',
+            options: colors,
+        },
+        {
+            id: 'label',
+            name: 'Label',
+            options: labels,
+        },
+    
+        {
+            id: 'size',
+            name: 'Size',
+            options: sizes,
+        },
+    ]
+
+    // ------- filter logic ------------
+
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
     const [filter, setFilter] = useState({});
     const dispatch = useDispatch();
@@ -58,7 +50,9 @@ const Filter = () => {
 
         if (e.target.checked) {
             newFilter[section.id] = option.value;
-            dispatch(productCategory(option.value))
+
+            section.id == "category" && dispatch(productCategory(option.value));
+            
         } else {
             delete newFilter[section.id];
             dispatch(productCategory("All Products"))
@@ -70,6 +64,14 @@ const Filter = () => {
 
         setMobileFiltersOpen(false);
     }
+
+    // dispatch actions to fetch all Filter options which are used in Filters object
+    useEffect(()=>{
+        dispatch(fetchAllCategoriesAsync())
+        dispatch(fetchAllLabelsAsync());
+        dispatch(fetchAllColorsAsync());
+        dispatch(fetchAllSizesAsync());
+    },[dispatch])
 
     return (
         <div>
