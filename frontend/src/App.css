@@ -149,7 +149,7 @@
 /* ************** End Home page ************** */
 
 
-.fa {
+.fa-instagram{
   background: #d6249f;
   background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
   -webkit-background-clip: text;
@@ -369,6 +369,11 @@ section {
   box-shadow: 0px 0px 3px #000;
   z-index: 99;
   cursor: pointer;
+}
+
+.tahir{
+  color:var(--bhagwa-color) !important;
+  font-weight: bold;
 }
 
 @media only screen and (max-width: 768px) {
