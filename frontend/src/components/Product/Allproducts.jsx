@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
-import { fetchAllProductsAsync, selectAllProducts,selectedProductCategory } from '../../Features/product/productSlice';
+import { fetchAllProductsAsync, selectAllProducts, selectedProductCategory } from '../../Features/product/productSlice';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 export default function Allproducts() {
     const dispatch = useDispatch();
     const newProducts = useSelector(selectAllProducts);
     const selectedProduct = useSelector(selectedProductCategory);
+    const navigate = useNavigate();
 
     useEffect(() => {
         dispatch(fetchAllProductsAsync());
@@ -17,9 +19,11 @@ export default function Allproducts() {
             <div className="mx-auto max-w-2xl px-4 pt-0 pb-16 sm:px-6 sm:py-10 lg:max-w-7xl lg:px-8">
                 <h2 className="text-2xl md:text-3xl tracking-wider font-bold text-gray-900 text-left font-agdasima capitalize">{selectedProduct}</h2>
                 <span className='text-sm mb-5 text-gray-500'>4 items</span>
-                <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+                <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
                     {newProducts.map((product) => (
-                        <div key={product.id} className="group relative">
+                        <div key={product.id} className="group relative"
+                            onClick={() => navigate(`/products/${product.id}`)}
+                        >
                             <div className="relative aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                                 <img
                                     src={product.thumbnail}
@@ -48,10 +52,10 @@ export default function Allproducts() {
                             <div className="flex justify-between">
                                 <div>
                                     <h3 className="text:sm md:text-lg text-gray-800">
-                                        <a href={product.title}>
+                                        <p>
                                             <span aria-hidden="true" className="absolute inset-0" />
                                             {product.title}
-                                        </a>
+                                        </p>
                                     </h3>
                                     {/* <p className="mt-1 text-sm text-gray-500">{product.color}</p> */}
                                 </div>
