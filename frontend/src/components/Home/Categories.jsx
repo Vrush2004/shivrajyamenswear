@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import bigSale from '../../assets/bigsale.png'
 import Shirt from '../../assets/shirt.jpg';
 import Tshirt from '../../assets/tshirt.jpg';
@@ -9,6 +9,8 @@ import shoes from '../../assets/shoes.jpg';
 import jacket from '../../assets/jackets.jpg';
 import { NavLink } from 'react-router-dom';
 import { Fade } from "react-awesome-reveal";
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAllCategoriesAsync, selectAllCategories } from '../../Features/product/productSlice';
 
 const categories = [
     { name: "", img: bigSale, link: '/' },
@@ -23,6 +25,12 @@ const categories = [
 
 const Categories = () => {
     const categoryContainerRef = useRef(null);
+    const dispatch = useDispatch();
+    const newCategories = useSelector(selectAllCategories)
+
+    useEffect(()=>{
+        dispatch(fetchAllCategoriesAsync());
+    },[dispatch])
 
     const scrollLeft = () => {
         const container = categoryContainerRef.current;
@@ -37,14 +45,21 @@ const Categories = () => {
     return (
         <div className='category-wrapper px-4 py-6 md:px-16 md:pb-2 md:pt-5'>
             <div className="category-container flex flex-row gap-6 md:gap-12 overflow-x-scroll hide-scrollbar" ref={categoryContainerRef}>
-                {categories.map((category, index) => (
+                <Fade delay={500} direction='left'>
+                    <NavLink to="/" value="/" className="category-box">
+                        <div className="image-box w-20 h-20 md:w-32 md:h-32 pixalated">
+                            <img src={bigSale} alt="shirts" className='w-full h-full' style={{ borderRadius: '50%' }} />
+                        </div>
+                    </NavLink>
+                </Fade>
+                {newCategories.map((category, index) => (
                     <Fade delay={500} direction='left'>
-                        <NavLink to={category.link} value={category.link} className="category-box" key={index}>
+                        <NavLink to="/products" value={category.value} className="category-box" key={index}>
                             <div className="image-box w-20 h-20 md:w-32 md:h-32 pixalated">
                                 <img src={category.img} alt="shirts" className='w-full h-full' style={{ borderRadius: '50%' }} />
                             </div>
                             <div className="name text-center mt-2 font-geolatica text-sm md:text-lg">
-                                {category.name}
+                                {category.value}
                             </div>
                         </NavLink>
                     </Fade>

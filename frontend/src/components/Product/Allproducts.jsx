@@ -18,7 +18,7 @@ export default function Allproducts() {
         <div className="bg-white">
             <div className="mx-auto max-w-2xl px-4 pt-0 pb-16 sm:px-6 sm:py-10 lg:max-w-7xl lg:px-8">
                 <h2 className="text-2xl md:text-3xl tracking-wider font-bold text-gray-900 text-left font-agdasima capitalize">{selectedProduct}</h2>
-                <span className='text-sm mb-5 text-gray-500'>4 items</span>
+                <span className='text-sm mb-5 text-gray-500'>{newProducts.length} items</span>
                 <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
                     {newProducts.map((product) => (
                         <div key={product.id} className="group relative"
