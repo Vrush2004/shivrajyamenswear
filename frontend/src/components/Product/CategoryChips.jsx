@@ -6,6 +6,7 @@ import sweatshirt from '../../assets/sweatshirt.jpg';
 import accessories from '../../assets/accessories.jpg';
 import shoes from '../../assets/shoes.jpg';
 import jacket from '../../assets/jackets.jpg';
+import { Fade } from 'react-awesome-reveal';
 
 const categories = [
     { name: "Shirts", img: Shirt, link: '/category/shirt' },
@@ -20,26 +21,28 @@ const categories = [
 const CategoryChips = () => {
     return (
         <div className='category-wrapper px-4 py-6 md:px-16 md:pb-2 md:pt-5'>
+                <Fade delay={500} direction='left'>
             <div className="category-container flex flex-row gap-3 md:gap-12 overflow-x-scroll hide-scrollbar">
-                {
-                    categories.map((category, index) =>
-                        <div key={index} class="relative inline-block select-none whitespace-nowrap rounded-full px-4 py-3 align-baseline text-xs font-bold uppercase leading-none border border-orange-900">
-                            <div class="absolute top-2/4 left-0 h-8 w-8 -translate-y-2/4">
-                                <img
-                                    alt="candice wu"
-                                    src={category.img}
-                                    class="relative inline-block  h-8 w-8 translate-x-px translate-y-px rounded-full object-cover object-center"
-                                />
+                    {
+                        categories.map((category, index) => (
+                            <div key={index} class="relative inline-block select-none whitespace-nowrap rounded-full px-4 py-3 align-baseline text-xs font-bold uppercase leading-none border border-orange-900">
+                                <div class="absolute top-2/4 left-0 h-8 w-8 -translate-y-2/4">
+                                    <img
+                                        alt="candice wu"
+                                        src={category.img}
+                                        class="relative inline-block  h-8 w-8 translate-x-px translate-y-px rounded-full object-cover object-center"
+                                    />
+                                </div>
+                                <div class="ml-6 mt-px">
+                                    <p class="block font-sans text-sm font-medium capitalize leading-none antialiased text-black">
+                                        {category.name}
+                                    </p>
+                                </div>
                             </div>
-                            <div class="ml-6 mt-px">
-                                <p class="block font-sans text-sm font-medium capitalize leading-none antialiased text-black">
-                                    {category.name}
-                                </p>
-                            </div>
-                        </div>
-                    )}
+                        ))}
 
             </div>
+                        </Fade>
         </div>
     )
 }

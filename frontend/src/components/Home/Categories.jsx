@@ -8,9 +8,10 @@ import accessories from '../../assets/accessories.jpg';
 import shoes from '../../assets/shoes.jpg';
 import jacket from '../../assets/jackets.jpg';
 import { NavLink } from 'react-router-dom';
+import { Fade } from "react-awesome-reveal";
 
 const categories = [
-    { name: "", img: bigSale, link: '/'},
+    { name: "", img: bigSale, link: '/' },
     { name: "Shirts", img: Shirt, link: '/category/shirt' },
     { name: "Jeans", img: jeans, link: '/category/jeans' },
     { name: "T-Shirts", img: Tshirt, link: '/category/tshirt' },
@@ -37,14 +38,16 @@ const Categories = () => {
         <div className='category-wrapper px-4 py-6 md:px-16 md:pb-2 md:pt-5'>
             <div className="category-container flex flex-row gap-6 md:gap-12 overflow-x-scroll hide-scrollbar" ref={categoryContainerRef}>
                 {categories.map((category, index) => (
-                    <NavLink to={category.link} value={category.link} className="category-box" key={index}>
-                        <div className="image-box w-20 h-20 md:w-32 md:h-32 pixalated">
-                            <img src={category.img} alt="shirts" className='w-full h-full' style={{ borderRadius: '50%' }} />
-                        </div>
-                        <div className="name text-center mt-2 font-geolatica text-sm md:text-lg">
-                            {category.name}
-                        </div>
-                    </NavLink>
+                    <Fade delay={500} direction='left'>
+                        <NavLink to={category.link} value={category.link} className="category-box" key={index}>
+                            <div className="image-box w-20 h-20 md:w-32 md:h-32 pixalated">
+                                <img src={category.img} alt="shirts" className='w-full h-full' style={{ borderRadius: '50%' }} />
+                            </div>
+                            <div className="name text-center mt-2 font-geolatica text-sm md:text-lg">
+                                {category.name}
+                            </div>
+                        </NavLink>
+                    </Fade>
                 ))}
             </div>
             <div className="scroll-buttons-container hidden md:block">
