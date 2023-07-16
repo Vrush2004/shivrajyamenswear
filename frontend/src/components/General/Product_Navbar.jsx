@@ -1,19 +1,21 @@
 import Logo from '../../assets/logo.png'
 import { NavLink } from 'react-router-dom';
 import Filter from '../Product/Filter'
+import { useNavigate } from "react-router-dom";
 
 const Product_Navbar = () => {
+    const navigate = useNavigate();
 
     return (
         <nav className="flex items-center justify-between py-2 lg:py-3  bg-black text-white sticky top-0 z-10">
 
             <div className='flex items-center'>
                 {/* go back */}
-                <NavLink to="/" className="ml-3">
+                <div to="/" className="ml-3 mr-3" onClick={()=>navigate(-1)}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-8 h-8">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15m0 0l6.75 6.75M4.5 12l6.75-6.75" />
                     </svg>
-                </NavLink>
+                </div>
 
                 {/* Center Logo */}
                 <NavLink to="/"><img src={Logo} alt="Center Logo" className="w-28 lg:w-40" /></NavLink>
