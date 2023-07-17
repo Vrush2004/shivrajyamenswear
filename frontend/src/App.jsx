@@ -8,6 +8,7 @@ import Tagline from "./components/General/Tagline";
 import ProductDetailsPage from "./Pages/ProductDetailsPage";
 import CheckoutPage from "./Pages/CheckoutPage";
 import ScrollToTop from "./components/General/ScrollToTop";
+import OrdersPage from "./Pages/OrdersPage";
 
 export default function App() {
 
@@ -16,7 +17,6 @@ export default function App() {
 
   const handleSize = () => {
     setWidth(window.innerWidth);
-    dispatch(setCurrentWidth(window.innerWidth));
   };
 
   useEffect(() => {
@@ -37,8 +37,9 @@ export default function App() {
       <Routes>
         <Route exact path="/" element={<HomePage currentWidth={width} />}></Route>
         <Route exact path="/products" element={<ProductListPage currentWidth={width} />}></Route>
-        <Route exact path="/products/men" element={<ProductDetailsPage currentWidth={width} />}></Route>
+        <Route exact path="/products/:id" element={<ProductDetailsPage currentWidth={width} />}></Route>
         <Route exact path="/checkout" element={<CheckoutPage />}></Route>
+        <Route exact path="/orders" element={<OrdersPage />}></Route>
       </Routes>
 
       {width < 640 && <BottomNav />}

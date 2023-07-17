@@ -56,3 +56,11 @@ export function fetchProductsByFilters(filter) {
     }
     );
 }
+
+export function fetchProductById(id) {
+    return new Promise(async (resolve) => {
+        const response = await fetch(`${baseUrl}/products/`+id);
+        const data = await response.json();
+        resolve({ data });
+    })
+}

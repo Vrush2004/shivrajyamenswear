@@ -5,17 +5,19 @@ import {
     fetchAllCategories,
     fetchAllLabels,
     fetchAllColors,
-    fetchAllSizes
+    fetchAllSizes,
+    fetchProductById
 } from './productApi';
 
 const initialState = {
     products: [],
     status: 'idle',
-    selectedProduct: "All Products",
+    selectedCategory: "All Products",
     categories: [],
     labels: [],
     colors: [],
-    sizes: []
+    sizes: [],
+    selectedProduct:null
 }
 
 export const fetchAllProductsAsync = createAsyncThunk(
@@ -63,13 +65,23 @@ export const fetchProductsByFiltersAsync = createAsyncThunk(
     }
 );
 
+export const fetchProductsByIdAsync = createAsyncThunk(
+    'product/fetchProductsByIdAsync',
+    async (id) => {
+        const response = await fetchProductById(id);
+        // The value we return becomes the `fulfilled` action payload
+        return response.data;
+    }
+);
+
+
 // ---------- main slice ------------
 export const productSlice = createSlice({
     name: 'product',
     initialState,
     reducers: {
         productCategory: (state, action) => {
-            state.selectedProduct = action.payload
+            state.selectedCategory = action.payload
         }
     },
     // --------- extra reducers -----------
@@ -127,6 +139,15 @@ export const productSlice = createSlice({
             .addCase(fetchAllSizesAsync.fulfilled, (state, action) => {
                 state.status = 'idle';
                 state.sizes = action.payload;
+            })
+
+            // selected product
+            .addCase(fetchProductsByIdAsync.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(fetchProductsByIdAsync.fulfilled, (state, action) => {
+                state.status = 'idle';
+                state.selectedProduct = action.payload;
             });
     }
 })
@@ -139,6 +160,8 @@ export const selectAllLabels = (state) => state.product.labels;
 export const selectAllColors = (state) => state.product.colors;
 export const selectAllSizes = (state) => state.product.sizes;
 
-export const selectedProductCategory = (state) => state.product.selectedProduct;
+export const selectedProductCategory = (state) => state.product.selectedCategory;
+
+export const selectedProduct = (state) => state.product.selectedProduct;
 
 export default productSlice.reducer;

@@ -1,49 +1,65 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
+import { selectedProduct, fetchProductsByIdAsync } from '../../Features/product/productSlice';
 import t1 from '../../assets/product/t1.jpg';
 import t2 from '../../assets/product/t2.jpg';
 import t3 from '../../assets/product/t3.jpg';
 import t4 from '../../assets/product/t4.jpg';
 
-
 function ProductDetails() {
-    const images = [t1, t2, t3, t4];
-    const [selectedImage, setSelectedImage] = useState(images[0]);
+    const Newimages = [t1, t2, t3, t4];
+    const dispatch = useDispatch();
+
+    const params = useParams();
+    const [selectedImage, setSelectedImage] = useState('');
+
+    useEffect(() => {
+        dispatch(fetchProductsByIdAsync(params.id));
+    }, [dispatch, params.id]);
+    const product = useSelector(selectedProduct);
+    if (!product) {
+        // Product is still being loaded, you can return a loading state or null here
+        return <div>Loading...</div>;
+    }
+
+    const handleImageClick = (image) => {
+        setSelectedImage(image);
+        console.log('Clicked on image:', image);
+    };
 
     return (
         <main className="item">
             <section className="img">
-                <img src={selectedImage} alt="" className="img-main" />
+                <img src={selectedImage || product.images[0]} alt="" className="img-main" />
                 <div className="img-btns">
-                    {
-                        images.map((image, index) => (
-                            <button className="img-btn" key={index}>
-                                <img src={image} alt="shoe product image"
-                                    className="img-btn__img"
-                                    onClick={() => setSelectedImage(image)}
-                                />
-                            </button>
-                        ))
-                    }
+                    {product.images.map((image, index) => (
+                        <button
+                            className={`img-btn`}
+                            key={index}
+                            onClick={() => console.log("fuckk")}
+                        >
+                            <img src={image} alt="shoe product image" className="img-btn__img" onClick={() => handleImageClick(image)} />
+                        </button>
+                    ))}
                 </div>
             </section>
 
             <section className="price">
-                <h2 className="price-sub__heading">Sneaker Company</h2>
-                <h1 className="price-main__heading font-agdasima">Fall Limited Edition Sneakers</h1>
-                <p className="price-txt">
-                    These low-profile sneakers are your perfect casual wear companion.
-                    Featuring a durable rubber outer sole, they’ll withstand everything
-                    the weather can offer.
+                <h2 className="price-sub__heading">{product.brand}</h2>
+                <h1 className="price-main__heading font-agdasima">{product.title}</h1>
+                <p className="price-txt mb-2">
+                    {product.description}
                 </p>
                 <div className="price-box">
                     <div className="price-box__main">
-                        <span className="price-box__main-new font-agdasima ">$125.00</span>
-                        <span className="price-box__main-discount"> 50%</span>
+                        <span className="price-box__main-new font-agdasima ">₹ {Math.round(product.price - (product.price * (product.discountPercentage / 100)))}.00</span>
+                        <span className="price-box__main-discount"> {product.discountPercentage}%</span>
                     </div>
-                    <span className="price-box__old">$250.00</span>
+                    <span className="price-box__old">₹ {product.price}</span>
                 </div>
 
-                <div className="size-box flex text-black">
+                <div className="size-box flex text-black my-3">
                     <select required>
                         <option value="default">Select size</option>
                         <option value="SM">SM</option>
@@ -70,10 +86,10 @@ function ProductDetails() {
                         </button>
                         <span className="price-btn__txt">1</span>
                         <button className="price-btn__remove price-btn">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5"
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5"
                                 stroke="#ff8000"
                                 className="price-btn__remove-img price-btn__img w-4 h-4 md:w-6 md:h-6">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 12h-15" />
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12h-15" />
                             </svg>
                         </button>
                     </div>
@@ -83,7 +99,7 @@ function ProductDetails() {
                             className="price-cart__btn-img w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z" />
                         </svg>
-                        But Now
+                        Buy Now
                     </button>
                 </div>
             </section>
