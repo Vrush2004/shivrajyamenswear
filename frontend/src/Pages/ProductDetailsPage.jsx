@@ -5,6 +5,7 @@ import Product_Navbar from '../components/General/Product_Navbar';
 import YouMayAlsoLike from '../components/Product/browse/YouMayAlsoLike';
 import Categories from '../components/Home/Categories';
 import { useParams } from 'react-router-dom';
+import Footer from '../components/General/Footer';
 
 const ProductDetailsPage = ({ currentWidth }) => {
     const productId = useParams();
@@ -20,6 +21,7 @@ const ProductDetailsPage = ({ currentWidth }) => {
                 <h2 className="text-xl ml-4 md:text-3xl font-bold text-gray-900 text-left">Shop by categories</h2>
                 <Categories />
             </div>
+            <Footer/>
         </div>
     )
 }
