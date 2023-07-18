@@ -39,7 +39,7 @@ export default function App() {
         <Route exact path="/products" element={<ProductListPage currentWidth={width} />}></Route>
         <Route exact path="/products/:id" element={<ProductDetailsPage currentWidth={width} />}></Route>
         <Route exact path="/checkout" element={<CheckoutPage />}></Route>
-        <Route exact path="/orders" element={<OrdersPage />}></Route>
+        <Route exact path="/orders" element={<OrdersPage currentWidth={width} />}></Route>
       </Routes>
 
       {width < 640 && <BottomNav />}
