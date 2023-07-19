@@ -11,17 +11,25 @@ const ScrollToTop = () => {
         })
     }, [position])
 
-    const [visibility, setVisibility] = useState(false);
+    const scrollTop = useRef(null);
 
-    const scrollTop = useRef();
+   useEffect(() => {
+        const handleScroll = () => {
+            // Check if scrollTop.current is not null before accessing its style property
+            if (scrollTop.current) {
+                window.scrollY > 200
+                    ? scrollTop.current.style.display = 'inline-block'
+                    : scrollTop.current.style.display = 'none';
+            }
+        };
 
-    useEffect(() => {
-        window.addEventListener('scroll', (e) => {
-            window.scrollY > 200
-                ? scrollTop.current.style.display = 'inline-block'
-                : scrollTop.current.style.display = 'none'
-        })
-    })
+        window.addEventListener('scroll', handleScroll);
+
+        // Clean up the event listener on unmount
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
 
     return (
         <div className='scroll-button'
