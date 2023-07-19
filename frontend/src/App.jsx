@@ -9,6 +9,9 @@ import ProductDetailsPage from "./Pages/ProductDetailsPage";
 import CheckoutPage from "./Pages/CheckoutPage";
 import ScrollToTop from "./components/General/ScrollToTop";
 import OrdersPage from "./Pages/OrdersPage";
+import WishlistPage from "./Pages/WishlistPage";
+import { useDispatch } from "react-redux";
+import { fetchWishlistItemsAsync } from "./Features/Wishlist/wishlistSlice";
 
 export default function App() {
 
@@ -27,6 +30,12 @@ export default function App() {
     };
   }, []);
 
+  // ******** fetch wishlist ********
+  const dispatch = useDispatch();
+  useEffect(()=>{
+    dispatch(fetchWishlistItemsAsync())
+  },[dispatch])
+
   return (
     <>
     {
@@ -40,6 +49,7 @@ export default function App() {
         <Route exact path="/products/:id" element={<ProductDetailsPage currentWidth={width} />}></Route>
         <Route exact path="/checkout" element={<CheckoutPage />}></Route>
         <Route exact path="/orders" element={<OrdersPage currentWidth={width} />}></Route>
+        <Route exact path="/wishlist" element={<WishlistPage currentWidth={width} />}></Route>
       </Routes>
 
       {width < 640 && <BottomNav />}

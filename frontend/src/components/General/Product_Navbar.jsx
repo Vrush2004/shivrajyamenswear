@@ -2,9 +2,14 @@ import Logo from '../../assets/logo.png'
 import { NavLink } from 'react-router-dom';
 import Filter from '../Product/Filter'
 import { useNavigate } from "react-router-dom";
+import { useSelector } from 'react-redux';
+import { selectItems } from '../../Features/Wishlist/wishlistSlice';
 
 const Product_Navbar = () => {
     const navigate = useNavigate();
+
+     // select wishlist items from redux store to display the wishlist items count on Navbar
+    const items = useSelector(selectItems);
 
     return (
         <nav className="flex items-center justify-between py-2 lg:py-3  bg-black text-white sticky top-0 z-10">
@@ -28,12 +33,12 @@ const Product_Navbar = () => {
                     </svg>
                 </div>
                 <div>
-                    <NavLink to="/cart" value="/cart" className="text-white hover:text-gray-400 flex relative">
+                    <NavLink to="/wishlist" value="/cart" className="text-white hover:text-gray-400 flex relative">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                         </svg>
 
-                        <div className='badge'>0</div>
+                        <div className='badge'>{items.length}</div>
                     </NavLink>
                 </div>
 

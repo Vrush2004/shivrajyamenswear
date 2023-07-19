@@ -332,6 +332,7 @@ section {
   gap: 1.5rem;
 }
 
+/* buy now button */
 .btn--orange {
   padding: 2rem 4rem;
   font-size: 1rem;
@@ -343,6 +344,13 @@ section {
   cursor: pointer;
   height: 30%;
   color: white;
+  transition: .5s;
+}
+
+.btn--orange:hover {
+  color: var(--bhagwa-color);
+  border: 1px solid var(--bhagwa-color);
+  background: transparent;
 }
 
 .size-box select {
@@ -353,6 +361,7 @@ section {
   color: var(--dark-grayish-blue);
 }
 
+/* add to wishlist button */
 .wishlist {
   display: flex;
   gap: 0.8rem;
@@ -362,8 +371,15 @@ section {
   color: white;
   border-radius: 5px;
   font-size: 1rem;
-  cursor: pointer;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, .5);
+  transition: .5s;
+}
+
+.wishlist:hover {
+  background: transparent;
+  color: black;
+  border: 1px solid black;
+  cursor: pointer;
 }
 
 .scroll-button {
@@ -383,6 +399,80 @@ section {
 }
 
 /* ************** End Product Details page ************** */
+
+/* ************** Empty cart/wishlist component  ************** */
+.empty-cart {
+  width: 50vw;
+  margin: 0 auto;
+  text-align: center;
+  font-family: 'Maison Neue';
+  font-weight: 300;
+}
+
+.empty-cart svg {
+  max-width: 60%;
+  padding: 5rem 3rem;
+}
+
+.empty-cart svg #oval,
+.empty-cart svg #plus,
+.empty-cart svg #diamond,
+.empty-cart svg #bubble-rounded {
+  animation: plopp 4s ease-out infinite;
+}
+
+.empty-cart svg #oval:nth-child(1),
+.empty-cart svg #plus:nth-child(1),
+.empty-cart svg #diamond:nth-child(1),
+.empty-cart svg #bubble-rounded:nth-child(1) {
+  animation-delay: -240ms;
+}
+
+/* Generate the remaining selectors for nth-child dynamically */
+.empty-cart svg *[id^="oval"]:nth-child(n),
+.empty-cart svg *[id^="plus"]:nth-child(n),
+.empty-cart svg *[id^="diamond"]:nth-child(n),
+.empty-cart svg *[id^="bubble-rounded"]:nth-child(n) {
+  animation-delay: calc(-240ms * (n - 1));
+}
+
+.empty-cart svg #bg-line:nth-child(2) {
+  fill-opacity: 0.3;
+}
+
+.empty-cart svg #bg-line:nth-child(3) {
+  fill-opacity: 0.4;
+}
+
+@keyframes plopp {
+  0% {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(0, -10px);
+    opacity: 0;
+  }
+}
+
+.empty-cart h3 {
+  font-size: 2rem;
+  line-height: 2rem;
+  margin: 0;
+  padding: 0;
+  font-weight: 600;
+}
+
+.empty-cart p {
+  color: rgba(0, 0, 0, 0.5);
+  font-size: 18px;
+  line-height: 24px;
+  max-width: 80%;
+  margin: 1.25rem auto 0 auto;
+}
+
+/* ************** End Empty cart/wishlist component ************** */
 
 .tahir {
   color: var(--bhagwa-color) !important;
@@ -496,5 +586,15 @@ section {
     bottom: 10%;
     padding: 10px;
   }
+
+  .empty-cart {
+    width: 100%;
+  }
+  .empty-cart svg {
+    max-width: 100%;
+    padding: 0;
+    margin-top: 4rem;
+    margin-bottom: 2rem;
+}
 
 }

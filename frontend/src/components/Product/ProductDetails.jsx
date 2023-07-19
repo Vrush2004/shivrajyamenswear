@@ -2,32 +2,91 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { selectedProduct, fetchProductsByIdAsync } from '../../Features/product/productSlice';
-import t1 from '../../assets/product/t1.jpg';
-import t2 from '../../assets/product/t2.jpg';
-import t3 from '../../assets/product/t3.jpg';
-import t4 from '../../assets/product/t4.jpg';
+import { addToWishlistAsync } from '../../Features/Wishlist/wishlistSlice';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.min.css';
 
 function ProductDetails() {
-    const Newimages = [t1, t2, t3, t4];
+    // selectors
     const dispatch = useDispatch();
-
     const params = useParams();
-    const [selectedImage, setSelectedImage] = useState('');
 
+
+    // fetch the product details
     useEffect(() => {
         dispatch(fetchProductsByIdAsync(params.id));
     }, [dispatch, params.id]);
+
+    // select the current 'product' from redux store
     const product = useSelector(selectedProduct);
-    if (!product) {
-        // Product is still being loaded, you can return a loading state or null here
-        return <div>Loading...</div>;
-    }
+
+    // Show a preview of the clicked image
+    const [selectedImage, setSelectedImage] = useState('');
 
     const handleImageClick = (image) => {
         setSelectedImage(image);
-        console.log('Clicked on image:', image);
     };
 
+    // change quantity
+    const [quantity, setQuantity] = useState(1);
+
+    // size options of the products
+    const [seletedSize, setSelectedSize] = useState('default');
+
+    // add item to the wishlist
+    const handleWishlist = (e) => {
+        e.preventDefault();
+
+        if (seletedSize == "default") {
+            toast.error('Please select the size', {
+                position: "top-center",
+                autoClose: 1000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        } else { // if size is not selected don't allow to add in wishlist
+
+            // *** get the wishlist items from localstorage to check the item is already in wishlist or not *** 
+            let wishlistItems = JSON.parse(localStorage.getItem("wishlist")) || [];
+
+            // Check if the item already exists in the wishlist
+            const isItemExists = wishlistItems.some((wishlistItem) => wishlistItem.id === product.id);
+
+            if (!isItemExists) {
+                dispatch(addToWishlistAsync({ ...product, quantity,seletedSize }))
+                toast.success('Item added to Wishlist!', {
+                    position: "top-center",
+                    autoClose: 1000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
+            } else {
+                toast.error('Product Already in wishlist!', {
+                    position: "top-center",
+                    autoClose: 1000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                });
+            }
+        }
+    }
+
+    // display loading until the product detail is being fetched
+    if (!product) {
+        return <div>Loading...</div>;
+    }
     return (
         <main className="item">
             <section className="img">
@@ -37,7 +96,6 @@ function ProductDetails() {
                         <button
                             className={`img-btn`}
                             key={index}
-                            onClick={() => console.log("fuckk")}
                         >
                             <img src={image} alt="shoe product image" className="img-btn__img" onClick={() => handleImageClick(image)} />
                         </button>
@@ -60,32 +118,32 @@ function ProductDetails() {
                 </div>
 
                 <div className="size-box flex text-black my-3">
-                    <select required>
+                    <select required onChange={(e) => setSelectedSize(e.target.value)}>
                         <option value="default">Select size</option>
                         <option value="SM">SM</option>
                         <option value="S">S</option>
                         <option value="M">M</option>
                         <option value="L">L</option>
                     </select>
-                    <div className="wishlist">
+                    <ToastContainer />
+                    <div className="wishlist" onClick={handleWishlist}>
                         <span className='hidden md:block'>Add to wishlist</span>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" />
                         </svg>
-
                     </div>
                 </div>
 
                 <div className="price-btnbox">
                     <div className="price-btns">
-                        <button className="price-btn__add price-btn">
+                        <button className="price-btn__add price-btn" onClick={() => setQuantity((prevQuantity) => prevQuantity + 1)}>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="#ff8000"
                                 className="price-btn__add-img price-btn__img w-4 h-4 md:w-6 md:h-6">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
                             </svg>
                         </button>
-                        <span className="price-btn__txt">1</span>
-                        <button className="price-btn__remove price-btn">
+                        <span className="price-btn__txt">{quantity}</span>
+                        <button className="price-btn__remove price-btn" onClick={() => setQuantity((prevQuantity) => (prevQuantity > 1 ? prevQuantity - 1 : 1))}>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="2.5"
                                 stroke="#ff8000"
                                 className="price-btn__remove-img price-btn__img w-4 h-4 md:w-6 md:h-6">
