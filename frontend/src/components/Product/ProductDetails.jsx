@@ -1,16 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { selectedProduct, fetchProductsByIdAsync } from '../../Features/product/productSlice';
 import { addToWishlistAsync } from '../../Features/Wishlist/wishlistSlice';
 import { toast, ToastContainer } from 'react-toastify';
+import { buyNowProduct } from '../../Features/checkout/checkoutSlice';
+
 import 'react-toastify/dist/ReactToastify.min.css';
 
 function ProductDetails() {
     // selectors
     const dispatch = useDispatch();
     const params = useParams();
-
+    const navigate = useNavigate();
 
     // fetch the product details
     useEffect(() => {
@@ -31,13 +33,13 @@ function ProductDetails() {
     const [quantity, setQuantity] = useState(1);
 
     // size options of the products
-    const [seletedSize, setSelectedSize] = useState('default');
+    const [selectedSize, setSelectedSize] = useState('default');
 
-    // add item to the wishlist
+    // ************* add item to the wishlist *************
     const handleWishlist = (e) => {
         e.preventDefault();
 
-        if (seletedSize == "default") {
+        if (selectedSize == "default") {
             toast.error('Please select the size', {
                 position: "top-center",
                 autoClose: 1000,
@@ -57,7 +59,7 @@ function ProductDetails() {
             const isItemExists = wishlistItems.some((wishlistItem) => wishlistItem.id === product.id);
 
             if (!isItemExists) {
-                dispatch(addToWishlistAsync({ ...product, quantity,seletedSize }))
+                dispatch(addToWishlistAsync({ ...product, quantity, selectedSize }))
                 toast.success('Item added to Wishlist!', {
                     position: "top-center",
                     autoClose: 1000,
@@ -80,6 +82,28 @@ function ProductDetails() {
                     theme: "light",
                 });
             }
+        }
+    }
+
+    // ************* buy now *************
+    const handleBuyNow = (e) => {
+        e.preventDefault();
+
+        if (selectedSize == "default") {
+            toast.error('Please select the size', {
+                position: "top-center",
+                autoClose: 1000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+            });
+        } else {
+            const actualPrice = Math.round(product.price - (product.price * (product.discountPercentage / 100))) * quantity
+            dispatch(buyNowProduct({ ...product, quantity, selectedSize, actualPrice }))
+            navigate('/checkout?source=product');
         }
     }
 
@@ -151,7 +175,7 @@ function ProductDetails() {
                             </svg>
                         </button>
                     </div>
-                    <button className="price-cart__btn btn--orange">
+                    <button className="price-cart__btn btn--orange" onClick={handleBuyNow}>
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             strokeWidth={1.5} stroke="currentColor"
                             className="price-cart__btn-img w-6 h-6">
