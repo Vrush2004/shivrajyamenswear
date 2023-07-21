@@ -2,54 +2,13 @@ import React from 'react'
 import { Fade, AttentionSeeker } from "react-awesome-reveal";
 import { selectAllProducts } from '../../Features/product/productSlice';
 import { useSelector } from 'react-redux';
-
-const products = [
-  {
-    id: 1,
-    name: 'Basic Tee',
-    href: '#',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: '$35',
-    color: 'Black',
-    label: "Best Seller"
-  },
-  {
-    id: 2,
-    name: 'Basic Tee',
-    href: '#',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: '$35',
-    color: 'Black',
-    label: "Trending"
-  },
-  {
-    id: 3,
-    name: 'Basic Tee',
-    href: '#',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: '$35',
-    color: 'Black',
-    label: "lowest price"
-  },
-  {
-    id: 4,
-    name: 'Basic Tee',
-    href: '#',
-    imageSrc: 'https://tailwindui.com/img/ecommerce-images/product-page-01-related-product-01.jpg',
-    imageAlt: "Front of men's Basic Tee in black.",
-    price: '$35',
-    color: 'Black',
-    label: "Branded"
-  },
-  // More products...
-]
+import { useNavigate } from 'react-router-dom';
 
 export default function FeaturedProducts() {
   const allProducts = useSelector(selectAllProducts);
   const featuredProducts = allProducts.filter((product) => product.label === 'Featured Product');
+
+  const navigate = useNavigate();
   
   return (
     <div className="bg-white">
@@ -60,7 +19,7 @@ export default function FeaturedProducts() {
 
         <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
           {featuredProducts.map((product) => (
-            <div key={product.id} className="group relative">
+            <div key={product.id} className="group relative" onClick={()=>navigate(`products/${product.id}`)}>
               <Fade delay={800} direction='down' triggerOnce={true}>
                 <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                   <img
