@@ -1,5 +1,7 @@
 import React from 'react'
 import { Fade, AttentionSeeker } from "react-awesome-reveal";
+import { selectAllProducts } from '../../Features/product/productSlice';
+import { useSelector } from 'react-redux';
 
 const products = [
   {
@@ -46,6 +48,9 @@ const products = [
 ]
 
 export default function FeaturedProducts() {
+  const allProducts = useSelector(selectAllProducts);
+  const featuredProducts = allProducts.filter((product) => product.label === 'Featured Product');
+  
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-2xl px-4 pt-0 pb-8 sm:px-6 sm:py-10 lg:max-w-7xl lg:px-8">
@@ -54,13 +59,13 @@ export default function FeaturedProducts() {
         </AttentionSeeker>
 
         <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-          {products.map((product) => (
+          {featuredProducts.map((product) => (
             <div key={product.id} className="group relative">
               <Fade delay={800} direction='down' triggerOnce={true}>
                 <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                   <img
-                    src={product.imageSrc}
-                    alt={product.imageAlt}
+                    src={product.thumbnail}
+                    alt={product.brand}
                     className="h-full w-full object-cover object-center lg:h-full lg:w-full"
                   />
                 </div>
@@ -80,9 +85,9 @@ export default function FeaturedProducts() {
                       {product.name}
                     </a>
                   </h3>
-                  <p className="mt-1 text-sm text-gray-500">{product.color}</p>
+                  <p className="mt-1 text-sm text-gray-500">{product.brand}</p>
                 </div>
-                <p className="text-sm font-medium text-gray-900">{product.price}</p>
+                <p className="text-sm font-medium text-gray-900">₹{Math.round(product.price - (product.price * (product.discountPercentage / 100)))}</p>
               </div>
             </div>
           ))}

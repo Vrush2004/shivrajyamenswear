@@ -56,10 +56,10 @@ const Categories = () => {
                     <Fade delay={500} direction='left'>
                         <NavLink to="/products" value={category.value} className="category-box" key={index}>
                             <div className="image-box w-20 h-20 md:w-32 md:h-32 pixalated">
-                                <img src={category.img} alt="shirts" className='w-full h-full' style={{ borderRadius: '50%' }} />
+                                <img src={category.img} alt={category.value} className='w-full h-full' style={{ borderRadius: '50%' }} />
                             </div>
                             <div className="name text-center mt-2 font-geolatica text-sm md:text-lg">
-                                {category.value}
+                                {category.label}
                             </div>
                         </NavLink>
                     </Fade>

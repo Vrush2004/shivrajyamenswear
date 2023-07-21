@@ -5,6 +5,7 @@ import { selectedProduct, fetchProductsByIdAsync } from '../../Features/product/
 import { addToWishlistAsync } from '../../Features/Wishlist/wishlistSlice';
 import { toast, ToastContainer } from 'react-toastify';
 import { buyNowProduct } from '../../Features/checkout/checkoutSlice';
+import { AttentionSeeker } from 'react-awesome-reveal';
 
 import 'react-toastify/dist/ReactToastify.min.css';
 
@@ -128,7 +129,16 @@ function ProductDetails() {
             </section>
 
             <section className="price">
-                <h2 className="price-sub__heading">{product.brand}</h2>
+                <div className="flex gap-x-5">
+                    <h2 className="price-sub__heading capitalize">{product.brand}</h2>
+                    <AttentionSeeker effect='bounce' duration={1000} delay={800}>
+                        <div className="home-page-product-label inline-block m-0 uppercase" style={{ fontSize: "11px" }}>
+                            <p className='' style={{}}>
+                                {product.label}
+                            </p>
+                        </div>
+                    </AttentionSeeker>
+                </div>
                 <h1 className="price-main__heading font-agdasima">{product.title}</h1>
                 <p className="price-txt mb-2">
                     {product.description}
@@ -144,10 +154,11 @@ function ProductDetails() {
                 <div className="size-box flex text-black my-3">
                     <select required onChange={(e) => setSelectedSize(e.target.value)}>
                         <option value="default">Select size</option>
-                        <option value="SM">SM</option>
-                        <option value="S">S</option>
-                        <option value="M">M</option>
-                        <option value="L">L</option>
+                        {
+                            product.selectedSizes.map((size, index) => (
+                                <option value={size} key={size}>{size}</option>
+                            ))
+                        }
                     </select>
                     <ToastContainer />
                     <div className="wishlist" onClick={handleWishlist}>

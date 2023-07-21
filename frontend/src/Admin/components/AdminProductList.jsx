@@ -1,25 +1,35 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
-import { selectAllProducts, selectedProductCategory } from '../../Features/product/productSlice';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { fetchAllProductsAsync, selectAllProducts, selectedProductCategory } from '../../Features/product/productSlice';
+import { Navigate, useNavigate, Link } from 'react-router-dom';
+import Filter from '../../components/Product/Filter';
 
-export default function Allproducts() {
+export default function AdminProductList({currentWidth}) {
+    const dispatch = useDispatch();
     const newProducts = useSelector(selectAllProducts);
     const selectedProduct = useSelector(selectedProductCategory);
     const navigate = useNavigate();
 
+    useEffect(() => {
+        dispatch(fetchAllProductsAsync());
+    }, [dispatch])
+
     return (
         <div className="bg-white">
             <div className="mx-auto max-w-2xl px-4 pt-0 pb-16 sm:px-6 sm:py-10 lg:max-w-7xl lg:px-8">
-                <h2 className="text-2xl md:text-3xl tracking-wider font-bold text-gray-900 text-left font-agdasima capitalize">{selectedProduct}</h2>
+                <div className='flex justify-between'>
+                    <h2 className="text-2xl md:text-3xl tracking-wider font-bold text-gray-900 text-left font-agdasima capitalize">{selectedProduct}</h2>
+                    {
+                        currentWidth < 640 && <Filter />
+                    }
+                </div>
                 <span className='text-sm mb-5 text-gray-500'>{newProducts.length} items</span>
                 <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
                     {newProducts.map((product) => (
                         <div key={product.id} className="group relative"
-                            onClick={() => navigate(`/products/${product.id}`)}
                         >
-                            <div className="relative aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
+                            <div onClick={() => navigate(`/products/${product.id}`)} className="relative aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                                 <img
                                     src={product.thumbnail}
                                     alt={product.title}
@@ -60,9 +70,18 @@ export default function Allproducts() {
                                     </h3>
                                     {/* <p className="mt-1 text-sm text-gray-500">{product.color}</p> */}
                                 </div>
-                                <p className="text-sm md:text-lg font-medium text-gray-800">₹{Math.round(product.price - (product.price * (product.discountPercentage / 100)))}</p>
+                                <p className="text-sm md:text-lg font-medium text-gray-800">₹{product.price}</p>
+                            </div>
+                            <div className="mt-5">
+                                <Link
+                                    to={`/admin/product-form/edit/${product.id}`}
+                                    className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                >
+                                    Edit Product
+                                </Link>
                             </div>
                         </div>
+
                     ))}
                 </div>
             </div>
