@@ -10,6 +10,8 @@ import CheckoutPage from "./Pages/CheckoutPage";
 import ScrollToTop from "./components/General/ScrollToTop";
 import OrdersPage from "./Pages/OrdersPage";
 import WishlistPage from "./Pages/WishlistPage";
+import PageNotFound from "./Pages/PageNotFound";
+import OrderSuccessPage from "./Pages/OrderSuccessPage";
 import { useDispatch } from "react-redux";
 import { fetchWishlistItemsAsync } from "./Features/Wishlist/wishlistSlice";
 
@@ -44,12 +46,14 @@ export default function App() {
     <ScrollToTop/>
     {/* <Product_Navbar/> */}
       <Routes>
+        <Route path="*" element={<PageNotFound/>}></Route>
         <Route exact path="/" element={<HomePage currentWidth={width} />}></Route>
         <Route exact path="/products" element={<ProductListPage currentWidth={width} />}></Route>
         <Route exact path="/products/:id" element={<ProductDetailsPage currentWidth={width} />}></Route>
         <Route exact path="/checkout" element={<CheckoutPage />}></Route>
         <Route exact path="/orders" element={<OrdersPage currentWidth={width} />}></Route>
         <Route exact path="/wishlist" element={<WishlistPage currentWidth={width} />}></Route>
+        <Route exact path="/order-success/:id" element={<OrderSuccessPage />}></Route>
       </Routes>
 
       {width < 640 && <BottomNav />}

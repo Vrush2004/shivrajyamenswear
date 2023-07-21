@@ -10,7 +10,7 @@ import {
 export default function DeliveryTimeline() {
   return (
     <div className="deliveryTimeline grid place-items-center mt-10">
-      <div className="w-[25rem] ">
+      <div className="md:w-[25rem] ">
         <Timeline>
           <TimelineItem className="h-28">
             <TimelineConnector className="!w-[78px]" />
