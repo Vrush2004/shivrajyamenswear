@@ -131,13 +131,17 @@ function ProductDetails() {
             <section className="price">
                 <div className="flex gap-x-5">
                     <h2 className="price-sub__heading capitalize">{product.brand}</h2>
-                    <AttentionSeeker effect='bounce' duration={1000} delay={800}>
-                        <div className="home-page-product-label inline-block m-0 uppercase" style={{ fontSize: "11px" }}>
-                            <p className='' style={{}}>
-                                {product.label}
-                            </p>
-                        </div>
-                    </AttentionSeeker>
+                    {
+                        product.label &&
+                        <AttentionSeeker effect='bounce' duration={1000} delay={800}>
+                            <div className="home-page-product-label inline-block m-0 uppercase" style={{ fontSize: "11px" }}>
+                                <p className='' style={{}}>
+                                    {product.label}
+                                </p>
+                            </div>
+                        </AttentionSeeker>
+                    }
+
                 </div>
                 <h1 className="price-main__heading font-agdasima">{product.title}</h1>
                 <p className="price-txt mb-2">
@@ -155,7 +159,7 @@ function ProductDetails() {
                     <select required onChange={(e) => setSelectedSize(e.target.value)}>
                         <option value="default">Select size</option>
                         {
-                            product.selectedSizes.map((size, index) => (
+                            product.selectedSizes && product.selectedSizes.map((size, index) => (
                                 <option value={size} key={size}>{size}</option>
                             ))
                         }

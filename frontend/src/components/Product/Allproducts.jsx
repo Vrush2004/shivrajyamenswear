@@ -14,10 +14,11 @@ export default function Allproducts() {
             <div className="mx-auto max-w-2xl px-4 pt-0 pb-16 sm:px-6 sm:py-10 lg:max-w-7xl lg:px-8">
                 <h2 className="text-2xl md:text-3xl tracking-wider font-bold text-gray-900 text-left font-agdasima capitalize">{selectedProduct}</h2>
                 <span className='text-sm mb-5 text-gray-500'>{newProducts.length} items</span>
-                <div className="mt-6 grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
+                <div className="mt-6 grid grid-cols-2 gap-x-2 gap-y-5 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
                     {newProducts.map((product) => (
                         <div key={product.id} className="group relative"
                             onClick={() => navigate(`/products/${product.id}`)}
+                            style={{ background: "var(--light-grayish-blue)" }}
                         >
                             <div className="relative aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
                                 <img
@@ -42,25 +43,38 @@ export default function Allproducts() {
                                 </div>
                             </div>
 
-                            <div className="mt-3 mb-2 inline-block m-0 uppercase flex justify-between align-items-center">
-                                <p className='text-sm text-gray-500' style={{fontSize:"12px"}}>
+                            <div className="mt-3 px-2 mb-2 inline-block m-0 uppercase flex justify-between items-center">
+                                <p className='text-sm text-gray-500 mt-2' style={{ fontSize: "12px" }}>
                                     {product.brand}
                                 </p>
-                                <p className='label' style={{ letterSpacing: "0.9px", fontSize: "10px", fontWeight: "100", background: "var(--pale-orange)" }}>
-                                    {product.label}
-                                </p>
+                                {
+                                    product.label &&
+                                    <p className='home-page-product-label mt-3 inline-block m-0 uppercase' style={{ fontSize: "10px" }}>
+                                        <p>
+                                            {product.label == "Featured Product" ? "Featured" : product.label}
+                                        </p>
+                                    </p>
+                                }
+
+                                {/* <p className='label' style={{ letterSpacing: "0.9px", fontSize: "10px", fontWeight: "100", background: "var(--pale-orange)" }}>
+                                    {product.label == "Featured Product" ? "Featured" : product.label}
+                                </p> */}
+                                {/* <div className="home-page-product-label mt-3 inline-block m-0 uppercase" style={{ fontSize: "10px" }}>
+                                    <p className='' style={{}}>
+                                        {product.label}
+                                    </p>
+                                </div> */}
                             </div>
 
-                            <div className="flex justify-between">
+                            <div className="flex justify-between px-2 pb-2">
                                 <div>
-                                    <h3 className="text:sm md:text-lg text-gray-800">
+                                    <h3 className="text-sm md:text-lg text-gray-800">
                                         <p>
                                             {product.title}
                                         </p>
                                     </h3>
-                                    {/* <p className="mt-1 text-sm text-gray-500">{product.color}</p> */}
                                 </div>
-                                <p className="text-sm md:text-lg font-medium text-gray-800">₹{Math.round(product.price - (product.price * (product.discountPercentage / 100)))}</p>
+                                <p className="text-sm md:text-lg font-medium text-gray-800 text-right">₹{Math.round(product.price - (product.price * (product.discountPercentage / 100)))}</p>
                             </div>
                         </div>
                     ))}
