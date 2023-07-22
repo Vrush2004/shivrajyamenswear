@@ -21,6 +21,7 @@ import Protected from "./Admin/Features/Protected";
 import AdminPanel from "./Admin/Pages/AdminPanel";
 import AdminProductDetailPage from "./Admin/Pages/AdminProductDetailPage";
 import AdminProductFormPage from "./Admin/Pages/AdminProductFormPage";
+import AdminOrdersPage from "./Admin/Pages/AdminOrdersPage";
 
 export default function App() {
 
@@ -84,6 +85,11 @@ export default function App() {
         <Route exact path="/admin/product-form/edit/:id" element={
           <Protected>
             <AdminProductFormPage />
+          </Protected>
+        }></Route>
+        <Route exact path="/admin/orders" element={
+          <Protected>
+            <AdminOrdersPage />
           </Protected>
         }></Route>
 
