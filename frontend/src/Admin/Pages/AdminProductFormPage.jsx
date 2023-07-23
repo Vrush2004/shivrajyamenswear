@@ -1,11 +1,11 @@
 import React from 'react'
 import ProductForm from '../components/ProductForm'
-import Actions from '../components/Actions'
+import AdminNavbar from '../components/AdminNavbar'
 
 const AdminProductFormPage = () => {
   return (
     <div>
-      <Actions />
+      <AdminNavbar/>
       <ProductForm />
     </div>
   )
