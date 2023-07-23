@@ -1,7 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react'
+import { useLocation } from 'react-router-dom'
 
 const ScrollToTop = () => {
     const [position, setPosition] = useState({ top: 0, left: 0 })
+    const {pathname} = useLocation();
 
     useEffect(() => {
         window.scroll({
@@ -9,7 +11,7 @@ const ScrollToTop = () => {
             left: position.left,
             behavior: 'smooth'
         })
-    }, [position])
+    }, [pathname,position])
 
     const scrollTop = useRef(null);
 
