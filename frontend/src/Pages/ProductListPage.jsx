@@ -1,9 +1,11 @@
-import React from 'react'
-import ProductList from '../components/Product/ProductList'
+import React, { Suspense } from 'react'
+// import ProductList from '../components/Product/ProductList'
+const ProductList = React.lazy(() => import('../components/Product/ProductList'));
 import Product_Navbar from '../components/General/Product_Navbar'
 import Navbar from '../components/General/Navbar'
 import CategoryChips from '../components/Product/CategoryChips'
 import DiscountBanner from '../components/Product/DiscountBanner'
+import Loader from '../components/General/Loader';
 
 const ProductListPage = ({ currentWidth }) => {
   return (
@@ -12,13 +14,15 @@ const ProductListPage = ({ currentWidth }) => {
         currentWidth < 640 ? <Product_Navbar /> : <Navbar />
       }
       {
-        currentWidth < 640 && 
+        currentWidth < 640 &&
         <div>
-          <CategoryChips/>
-          <DiscountBanner/>
+          <CategoryChips />
+          <DiscountBanner />
         </div>
       }
-      <ProductList currentWidth={currentWidth} />
+      <Suspense fallback={<Loader/>}>
+        <ProductList currentWidth={currentWidth} />
+      </Suspense>
     </div>
   )
 }

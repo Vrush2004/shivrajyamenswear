@@ -8,6 +8,7 @@ import { buyNowProduct } from '../../Features/checkout/checkoutSlice';
 import { AttentionSeeker } from 'react-awesome-reveal';
 
 import 'react-toastify/dist/ReactToastify.min.css';
+import Loader from '../General/Loader';
 
 function ProductDetails() {
     // selectors
@@ -110,7 +111,7 @@ function ProductDetails() {
 
     // display loading until the product detail is being fetched
     if (!product) {
-        return <div>Loading...</div>;
+        return <Loader/>;
     }
     return (
         <main className="item">
