@@ -24,21 +24,21 @@ export function fetchAllLabels() {
     })
 }
 
-export function fetchAllColors() {
-    return new Promise(async (resolve) => {
-        const response = await fetch(`${baseUrl}/colors`);
-        const data = await response.json();
-        resolve({ data });
-    })
-}
+// export function fetchAllColors() {
+//     return new Promise(async (resolve) => {
+//         const response = await fetch(`${baseUrl}/colors`);
+//         const data = await response.json();
+//         resolve({ data });
+//     })
+// }
 
-export function fetchAllSizes() {
-    return new Promise(async (resolve) => {
-        const response = await fetch(`${baseUrl}/sizes`);
-        const data = await response.json();
-        resolve({ data });
-    })
-}
+// export function fetchAllSizes() {
+//     return new Promise(async (resolve) => {
+//         const response = await fetch(`${baseUrl}/sizes`);
+//         const data = await response.json();
+//         resolve({ data });
+//     })
+// }
 
 export function fetchProductsByFilters(filter) {
     // filter = {"category":"smartphone"}
@@ -59,7 +59,7 @@ export function fetchProductsByFilters(filter) {
 
 export function fetchProductById(id) {
     return new Promise(async (resolve) => {
-        const response = await fetch(`${baseUrl}/products/`+id);
+        const response = await fetch(`${baseUrl}/getSingleProduct?id=${id}`);
         const data = await response.json();
         resolve({ data });
     })

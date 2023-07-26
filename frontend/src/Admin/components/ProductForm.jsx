@@ -151,7 +151,7 @@ function ProductForm() {
           product.rating = currentSelectedProduct.rating || 0;
           dispatch(updateProductAsync(product));
           reset();
-          toast.success('Product Created Successfully..!', {
+          toast.success('Product updated Successfully..!', {
             position: "bottom-center",
             autoClose: 1000,
             hideProgressBar: false,
@@ -164,7 +164,7 @@ function ProductForm() {
         } else {
           dispatch(createProductAsync(product));
           reset();
-          toast.success('Product updated!', {
+          toast.success('Product created!', {
             position: "bottom-center",
             autoClose: 1000,
             hideProgressBar: false,
@@ -174,7 +174,6 @@ function ProductForm() {
             progress: undefined,
             theme: "light",
           });
-          //TODO:  on product successfully added clear fields and show a message
         }
       })}
     >

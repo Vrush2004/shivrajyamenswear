@@ -3,15 +3,13 @@ import { Dialog, Disclosure, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { FunnelIcon, MinusIcon, PlusIcon } from '@heroicons/react/20/solid'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchProductsByFiltersAsync, productCategory,selectAllCategories,selectAllLabels,selectAllColors,selectAllSizes, fetchAllCategoriesAsync, fetchAllLabelsAsync, fetchAllColorsAsync, fetchAllSizesAsync } from '../../Features/product/productSlice'
+import { fetchProductsByFiltersAsync, productCategory,selectAllCategories,selectAllLabels, fetchAllCategoriesAsync, fetchAllLabelsAsync } from '../../Features/product/productSlice'
 
 
 const Filter = () => {
     // select filter object states coming from API
     const categories = useSelector(selectAllCategories);
     const labels = useSelector(selectAllLabels);
-    const colors = useSelector(selectAllColors);
-    const sizes = useSelector(selectAllSizes);
 
     // --------- filters ---------
     const filters = [
@@ -21,20 +19,9 @@ const Filter = () => {
             options: categories,
         },
         {
-            id: 'color',
-            name: 'Color',
-            options: colors,
-        },
-        {
             id: 'label',
             name: 'Label',
             options: labels,
-        },
-    
-        {
-            id: 'size',
-            name: 'Size',
-            options: sizes,
         },
     ]
 
@@ -69,8 +56,6 @@ const Filter = () => {
     useEffect(()=>{
         dispatch(fetchAllCategoriesAsync())
         dispatch(fetchAllLabelsAsync());
-        dispatch(fetchAllColorsAsync());
-        dispatch(fetchAllSizesAsync());
     },[dispatch])
 
     return (

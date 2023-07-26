@@ -4,8 +4,6 @@ import {
     fetchProductsByFilters,
     fetchAllCategories,
     fetchAllLabels,
-    fetchAllColors,
-    fetchAllSizes,
     fetchProductById
 } from './productApi';
 
@@ -43,20 +41,20 @@ export const fetchAllLabelsAsync = createAsyncThunk(
         return response.data;
     }
 )
-export const fetchAllColorsAsync = createAsyncThunk(
-    'product/fetchAllColors',
-    async () => {
-        const response = await fetchAllColors();
-        return response.data;
-    }
-)
-export const fetchAllSizesAsync = createAsyncThunk(
-    'product/fetchAllSizes',
-    async () => {
-        const response = await fetchAllSizes();
-        return response.data;
-    }
-)
+// export const fetchAllColorsAsync = createAsyncThunk(
+//     'product/fetchAllColors',
+//     async () => {
+//         const response = await fetchAllColors();
+//         return response.data;
+//     }
+// )
+// export const fetchAllSizesAsync = createAsyncThunk(
+//     'product/fetchAllSizes',
+//     async () => {
+//         const response = await fetchAllSizes();
+//         return response.data;
+//     }
+// )
 
 export const fetchProductsByFiltersAsync = createAsyncThunk(
     'product/fetchProductsByFilters',
@@ -145,22 +143,22 @@ export const productSlice = createSlice({
             })
 
             // colors
-            .addCase(fetchAllColorsAsync.pending, (state) => {
-                state.status = 'loading';
-            })
-            .addCase(fetchAllColorsAsync.fulfilled, (state, action) => {
-                state.status = 'idle';
-                state.colors = action.payload;
-            })
+            // .addCase(fetchAllColorsAsync.pending, (state) => {
+            //     state.status = 'loading';
+            // })
+            // .addCase(fetchAllColorsAsync.fulfilled, (state, action) => {
+            //     state.status = 'idle';
+            //     state.colors = action.payload;
+            // })
 
-            // sizes
-            .addCase(fetchAllSizesAsync.pending, (state) => {
-                state.status = 'loading';
-            })
-            .addCase(fetchAllSizesAsync.fulfilled, (state, action) => {
-                state.status = 'idle';
-                state.sizes = action.payload;
-            })
+            // // sizes
+            // .addCase(fetchAllSizesAsync.pending, (state) => {
+            //     state.status = 'loading';
+            // })
+            // .addCase(fetchAllSizesAsync.fulfilled, (state, action) => {
+            //     state.status = 'idle';
+            //     state.sizes = action.payload;
+            // })
 
             // selected product
             .addCase(fetchProductsByIdAsync.pending, (state) => {
@@ -200,8 +198,8 @@ export const { clearSelectedProduct } = productSlice.actions;
 export const selectAllProducts = (state) => state.product.products;
 export const selectAllCategories = (state) => state.product.categories;
 export const selectAllLabels = (state) => state.product.labels;
-export const selectAllColors = (state) => state.product.colors;
-export const selectAllSizes = (state) => state.product.sizes;
+// export const selectAllColors = (state) => state.product.colors;
+// export const selectAllSizes = (state) => state.product.sizes;
 
 export const selectedProductCategory = (state) => state.product.selectedCategory;
 

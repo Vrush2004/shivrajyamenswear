@@ -4,15 +4,19 @@ import { checkAdmin } from './authApi';
 const initialState = {
   loggedInAdmin: null,
   status: 'idle',
-  error:null
+  error: null
 };
 
 export const checkAdminAsync = createAsyncThunk(
   'admin/checkAdmin',
-  async (loginInfo) => {
-    const response = await checkAdmin(loginInfo);
-    // The value we return becomes the `fulfilled` action payload
-    return response.data;
+  async (loginInfo, { rejectWithValue }) => {
+    try {
+      const response = await checkAdmin(loginInfo);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+      return rejectWithValue(error)
+    }
   }
 );
 
@@ -40,8 +44,8 @@ export const authSlice = createSlice({
   },
 });
 
-export const selectLoggedInAdmin = (state)=>state.auth.loggedInAdmin;
-export const selectError = (state)=>state.auth.error;
+export const selectLoggedInAdmin = (state) => state.auth.loggedInAdmin;
+export const selectError = (state) => state.auth.error;
 
 export const { increment } = authSlice.actions;
 
