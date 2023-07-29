@@ -170,8 +170,9 @@ exports.fetchAllOrders = async (req, res) => {
     const { search, fromDate, toDate } = req.query;
     let query = {};
 
-    if (fromDate && toDate) {
+    if (fromDate || toDate) {
         const start = new Date(fromDate);
+        console.log(start);
         const end = new Date(toDate);
         end.setDate(end.getDate() + 1); // Adding 1 day to include orders on the 'toDate'
         query.createdAt = { $gte: start, $lt: end };
@@ -181,7 +182,7 @@ exports.fetchAllOrders = async (req, res) => {
         query.$or = [
             { "currentBuyNowProduct.title": { $regex: new RegExp(search, "i") } },
             { "currentBuyNowProduct.category": { $regex: new RegExp(search, "i") } },
-            { "address.fullAddr": { $regex: new RegExp(search, "i") } },
+            { "address.address": { $regex: new RegExp(search, "i") } },
             { "address.fullName": { $regex: new RegExp(search, "i") } },
             { "address.city": { $regex: new RegExp(search, "i") } },
             { "address.phone": { $regex: new RegExp(search, "i") } }
