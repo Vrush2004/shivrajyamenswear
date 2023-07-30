@@ -62,7 +62,7 @@ export default function App() {
         <Route exact path="/checkout" element={<CheckoutPage />}></Route>
         <Route exact path="/orders" element={<OrdersPage currentWidth={width} />}></Route>
         <Route exact path="/wishlist" element={<WishlistPage currentWidth={width} />}></Route>
-        <Route exact path="/order-success/:id" element={<OrderSuccessPage />}></Route>
+        <Route exact path="/order-success" element={<OrderSuccessPage />}></Route>
 
         <Route exact path="/login" element={<LoginPage />}></Route>
         <Route exact path="/admin" element={

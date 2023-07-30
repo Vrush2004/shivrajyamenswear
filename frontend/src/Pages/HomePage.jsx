@@ -1,8 +1,7 @@
 import React, { useState, useEffect,Suspense } from "react";
 import Search from "../components/General/Search";
 import Categories from "../components/Home/Categories";
-// import Banner from "../components/Home/Banner";
-const Banner = React.lazy(()=>import("../components/Home/Banner"));
+import Banner from "../components/Home/Banner";
 import DeliveryFeatures from "../components/Home/DeliveryFeatures";
 import FeaturedProducts from "../components/Home/FeaturedProducts"
 import Navbar from "../components/General/Navbar";
@@ -19,8 +18,6 @@ import banner_2 from "../assets/banner/desktop/banner2.jpg";
 import shirt_1 from "../assets/banner/mobile/shirt_banner_1.jpg";
 import shirt_2 from "../assets/banner/mobile/shirt_banner_2.jpg";
 import shirt_3 from "../assets/banner/mobile/shirt_banner_3.jpg";
-import Loader from "../components/General/Loader";
-
 
 
 const homePage_top_banners = [banner_souled_store, banner_monsoon];
@@ -41,10 +38,8 @@ export default function HomePage({ currentWidth }) {
       }
       {currentWidth > 640 &&
         <div>
-          <Suspense fallback={<Loader/>}>
           <Categories />
           <Banner images={desktop_banner_images} />
-          </Suspense>
         </div>
       }
       <DeliveryFeatures />

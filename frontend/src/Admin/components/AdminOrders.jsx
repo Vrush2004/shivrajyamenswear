@@ -23,6 +23,7 @@ import {
 } from "@material-tailwind/react";
 
 import Pagination from './Pagination';
+import FilterOrders from './FilterOrders';
 
 const TableRow = ({ order, index, editableOrderId, handleEdit, handleUpdate }) => {
 
@@ -177,6 +178,7 @@ const AdminOrders = () => {
 
     return (
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg md-0 md:mx-6 mb-32 md:mb-0 my-10">
+            <FilterOrders/>
             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-white uppercase bg-orange-500 dark:bg-gray-700 dark:text-gray-400">
                     <tr>

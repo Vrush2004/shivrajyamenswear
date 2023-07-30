@@ -32,7 +32,7 @@ const OrderSummary = () => {
         }
 
         if (buyNowProduct.length === 0) {
-            navigate(-1);
+            navigate('/products');
             console.log("hello");
         }
     }, [buyNowProduct, navigate, hasMounted]);

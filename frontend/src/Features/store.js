@@ -3,6 +3,7 @@ import productReducer from './product/productSlice';
 import wishlistReducer from './Wishlist/wishlistSlice';
 import checkoutReducer from './checkout/checkoutSlice';
 import orderReducer from './orders/orderSlice';
+import paymentReducer from "./Payment/paymentSlice";
 
 import authReducer from '../Admin/Features/Login/authSlice';
 
@@ -12,7 +13,8 @@ export const store = configureStore({
     wishlist:wishlistReducer,
     checkout:checkoutReducer,
     orders:orderReducer,
-    auth:authReducer
+    auth:authReducer,
+    payment:paymentReducer
   },
   middleware: getDefaultMiddleware({
     immutableCheck: false, // Disable ImmutableStateInvariantMiddleware

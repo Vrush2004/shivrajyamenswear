@@ -4,7 +4,9 @@ import { useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
 import { createOrderAsync } from '../../Features/orders/orderSlice';
 import { selectCurrentOrder } from '../../Features/orders/orderSlice';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { handlePaymentAsync, initPaymentAsync,orderId } from '../../Features/Payment/paymentSlice';
+import { baseUrl, RAZOR_PAY_KEY_ID } from '../../../config';
 
 const districtsOfMaharashtra = [
     { value: 'Ahmednagar', label: 'Ahmednagar' },
@@ -48,6 +50,7 @@ const districtsOfMaharashtra = [
 const PaymentDetails = () => {
 
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const currentBuyNowProduct = useSelector(selectBuyNowProduct);
     const paymentMethod = useSelector(selectPaymentMode);
@@ -60,7 +63,9 @@ const PaymentDetails = () => {
     deliveryCharges === 'Free' ? totalAmount = currentBuyNowProduct.actualPrice : totalAmount = currentBuyNowProduct.actualPrice + deliveryCharges
 
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
-
+    const onCloseHandler = () => {
+        console.log("model closed");
+    }
     const onSubmit = (address) => {
 
         const order = { currentBuyNowProduct, totalAmount, deliveryCharges, paymentMethod, address, status: 'pending' }
@@ -69,11 +74,111 @@ const PaymentDetails = () => {
         //TODO : on server change the stock number of items
 
         reset();
+        const orderDetails = {
+            id: currentBuyNowProduct.id,
+            title: currentBuyNowProduct.title,
+            quantity: currentBuyNowProduct.quantity,
+            thumbnail: currentBuyNowProduct.thumbnail,
+            phone: address.phone,
+            email: address.email,
+            deliveryCharges, // TODO: not need to send deliveryCharges; later we're adding deliveryCharges in product details itself
+            totalAmount
+        }
+        handlePayment(orderDetails);
+        // dispatch(handlePaymentAsync(orderDetails));
+        // const paymentData = useSelector(selectPaymentData);
+        // dispatch(initPaymentAsync(paymentData, orderDetails))
     }
+
+
+    const initPayment = (data, orderDetails) => {
+        const options = {
+            key: RAZOR_PAY_KEY_ID,
+            amount: data.amount,
+            currency: data.currency,
+            name: orderDetails.title,
+            description: "Shivrajya the brands men's wear",
+            image: orderDetails.thumbnail,
+            order_id: data.id,
+            prefill: {
+                contact: orderDetails.phone,
+                email: orderDetails.email,
+            },
+            theme: {
+                color: "#ffa347",
+            },
+            handler: async function (response, paymentSuccess) {
+                try {
+                    const verifyUrl = `${baseUrl}/payment/verify`;
+                    const verifyResponse = await fetch(verifyUrl, {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({ ...response, paymentSuccess }),
+                    });
+
+                    const verifyData = await verifyResponse.json();
+                    verifyData.paymentSuccess && dispatch(orderId(data.id));
+                    verifyData.paymentSuccess ? navigate(`/order-success`) : navigate('/fdsdd')
+                    console.log(verifyData);
+
+                    // If you want to handle the result of payment verification, you can resolve it here
+                } catch (error) {
+                    console.log(error);
+                    // Handle errors here if necessary
+                    // You might also want to reject the promise here
+                    // reject(error);
+                }
+            }, // handler fun end
+        }; // options end
+
+        const rzp1 = new window.Razorpay(options);
+
+        rzp1.on('payment.success', function (response) {
+            // On successful payment, call the handler function with the success flag
+            options.handler(response, true);
+        });
+
+        rzp1.on('payment.error', function (response) {
+            // On payment error, call the handler function with the success flag
+            options.handler(response, false);
+        });
+        rzp1.on('razorpay_payment_failed', function () {
+            // On payment failed (user closed the modal), call the handler function with the success flag set to false
+            options.handler({}, false);
+            onCloseHandler(); // Call the onCloseHandler to trigger the desired action when the modal is closed without successful payment
+        });
+
+        rzp1.open();
+    };
+
+
+    const handlePayment = async (orderDetails) => {
+        try {
+            const orderUrl = `${baseUrl}/payment/orders`;
+            const response = await fetch(orderUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    orderDetails,
+                }),
+            });
+            const data = await response.json();
+            console.log(data);
+            initPayment(data.data, orderDetails);
+        } catch (error) {
+            console.log(error);
+            throw error; // Rethrow the error to be caught by the thunk
+        }
+    };
+
 
     return (
         <>
-            {currentOrder && <Navigate to={`/order-success/${currentOrder.id}`} replace={true}></Navigate>}
+            {/* {currentOrder && <Navigate to={`/order-success/${currentOrder.id}`} replace={true}></Navigate>} */}
             <form onSubmit={handleSubmit(onSubmit)} class="mt-5 mb-10 px-4 pt-8 lg:mt-0" noValidate>
                 <p class="text-xl font-medium">Payment Details</p>
                 <p class="text-gray-400">Complete your order by providing your payment details.</p>
