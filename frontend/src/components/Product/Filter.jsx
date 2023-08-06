@@ -3,13 +3,14 @@ import { Dialog, Disclosure, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { FunnelIcon, MinusIcon, PlusIcon } from '@heroicons/react/20/solid'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchProductsByFiltersAsync, productCategory,selectAllCategories,selectAllLabels, fetchAllCategoriesAsync, fetchAllLabelsAsync } from '../../Features/product/productSlice'
+import { fetchProductsByFiltersAsync, productCategory,selectAllCategories,selectAllLabels, fetchAllCategoriesAsync, fetchAllLabelsAsync,selectedProductCategory } from '../../Features/product/productSlice'
 
 
 const Filter = () => {
     // select filter object states coming from API
     const categories = useSelector(selectAllCategories);
     const labels = useSelector(selectAllLabels);
+    const selectedCategory = useSelector(selectedProductCategory)
 
     // --------- filters ---------
     const filters = [
@@ -42,12 +43,11 @@ const Filter = () => {
             
         } else {
             delete newFilter[section.id];
-            dispatch(productCategory("All Products"))
+            dispatch(productCategory("All"))
         }
         setFilter(newFilter);
 
         dispatch(fetchProductsByFiltersAsync(newFilter));
-        console.log(section.id, option.value);
 
         setMobileFiltersOpen(false);
     }
@@ -175,7 +175,7 @@ const Filter = () => {
                                                                         name={`${section.id}[]`}
                                                                         defaultValue={option.value}
                                                                         type="checkbox"
-                                                                        defaultChecked={option.checked}
+                                                                        defaultChecked={selectedCategory === option.value }
                                                                         onClick={(e) => handleFilter(e, section, option)}
                                                                         className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                                                     />

@@ -12,7 +12,7 @@ import { createProduct, updateProduct } from '../../Admin/Features/Product/Admin
 const initialState = {
     products: [],
     status: 'idle',
-    selectedCategory: "All Products",
+    selectedCategory: "All",
     categories: [],
     labels: [],
     colors: [],

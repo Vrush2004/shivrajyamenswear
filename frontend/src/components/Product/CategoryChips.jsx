@@ -1,36 +1,19 @@
 import React, { useState } from 'react';
-import Shirt from '../../assets/shirt.jpg';
-import Tshirt from '../../assets/tshirt.jpg';
-import jeans from '../../assets/jeans.jpg';
-import sweatshirt from '../../assets/sweatshirt.jpg';
-import accessories from '../../assets/accessories.jpg';
-import shoes from '../../assets/shoes.jpg';
-import jacket from '../../assets/jackets.jpg';
 import { Fade } from 'react-awesome-reveal';
 import { useSelector, useDispatch } from 'react-redux';
-import { selectAllCategories, productCategory,fetchProductsByFiltersAsync } from '../../Features/product/productSlice';
+import { selectAllCategories, productCategory,fetchProductsByFiltersAsync,selectedProductCategory } from '../../Features/product/productSlice';
 
-const categories = [
-  { name: "All", img: null, link: '/' }, // New "All" category
-  { name: "Shirts", img: Shirt, link: '/category/shirt' },
-  { name: "Jeans", img: jeans, link: '/category/jeans' },
-  { name: "T-Shirts", img: Tshirt, link: '/category/tshirt' },
-  { name: "SweatShirt", img: sweatshirt, link: '/category/sweatshirt' },
-  { name: "Accessories", img: accessories, link: '/category/accessories' },
-  { name: "Jacket", img: jacket, link: '/category/jacket' },
-  { name: "Shoes", img: shoes, link: '/category/shoes' },
-];
 
 const CategoryChips = () => {
-  const newCategories = useSelector(selectAllCategories);
-  const [selectedCategory, setSelectedCategory] = useState("All"); // Set "All" as the default selected category
+  const categories = useSelector(selectAllCategories);
+  const selectedCategory = useSelector(selectedProductCategory); // Set "All" as the default selected category
   const dispatch = useDispatch();
 
   const handleCategoryClick = (category) => {
-    setSelectedCategory(category);
+    // setSelectedCategory(category);
     // Handle any other logic when a category is clicked
     if(category == "All"){
-        dispatch(productCategory("All Products"))
+        dispatch(productCategory("All"))
         dispatch(fetchProductsByFiltersAsync({}))
     }else{
         dispatch(productCategory(category));
@@ -57,7 +40,7 @@ const CategoryChips = () => {
               </p>
             </div>
           </div>
-          {newCategories.map((category, index) => (
+          {categories.map((category, index) => (
             <div
               key={index}
               className={`relative inline-block select-none whitespace-nowrap rounded-full px-4 py-3 align-baseline text-xs font-bold uppercase leading-none border  ${selectedCategory === category.value ? 'border0 bg-orange-500 text-white' : 'border-gray-400'}`}
