@@ -63,7 +63,7 @@ const OrderSummary = () => {
             <p class="mt-8 text-lg font-medium">Payment Methods</p>
             <form class="mt-5 grid gap-6">
                 <div class="relative">
-                    <input class="peer hidden" id="radio_1" type="radio" name="radio" value="UPI" onChange={handlePaymentMode} checked={paymentMode === "UPI"} />
+                    <input class="peer hidden" id="radio_1" type="radio" name="radio" value="UPI" onChange={handlePaymentMode} checked={true} />
                     <span class="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white"></span>
                     <label class="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4" for="radio_1">
                         <img class="w-16 object-contain" src={UPI} alt="" />
@@ -74,13 +74,13 @@ const OrderSummary = () => {
                     </label>
                 </div>
                 <div class="relative">
-                    <input class="peer hidden" id="radio_2" type="radio" name="radio" value="CASH" onChange={handlePaymentMode} checked={paymentMode === "CASH"} />
+                    <input class="peer hidden" id="radio_2" type="radio" name="radio" value="CASH" onChange={handlePaymentMode} checked={false} />
                     <span class="peer-checked:border-gray-700 absolute right-4 top-1/2 box-content block h-3 w-3 -translate-y-1/2 rounded-full border-8 border-gray-300 bg-white"></span>
                     <label class="peer-checked:border-2 peer-checked:border-gray-700 peer-checked:bg-gray-50 flex cursor-pointer select-none rounded-lg border border-gray-300 p-4" for="radio_2">
                         <img class="w-14 object-contain" src={Cash} alt="" />
                         <div class="ml-5">
                             <span class="mt-2 font-semibold">Cash on delivery</span>
-                            <p class="text-slate-500 text-sm leading-6">Delivery: 2-4 Days</p>
+                            <p class="text-red-500 text-sm leading-6">COD not available</p>
                         </div>
                     </label>
                 </div>

@@ -3,7 +3,6 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 const initialState = {
     status: 'idle',
     buyNowItem: [],
-    deliveryCharges:40,
     paymentMode:"UPI",
     shippingInfo:null
 }
@@ -31,19 +30,15 @@ const checkoutSlice = createSlice({
         buyNowProduct: (state, action) => {
             state.buyNowItem = action.payload;
         },
-        deliveryCharges:(state,action)=>{
-            state.deliveryCharges = action.payload
-        },
         orderPaymentMode:(state,action)=>{
             state.paymentMode = action.payload
         }
     },
 })
 
-export const { buyNowProduct,deliveryCharges,orderPaymentMode } = checkoutSlice.actions;
+export const { buyNowProduct,orderPaymentMode } = checkoutSlice.actions;
 
 export const selectBuyNowProduct = (state) => state.checkout.buyNowItem;
-export const selectDeliveryCharges = (state) => state.checkout.deliveryCharges;
 export const selectPaymentMode = (state) => state.checkout.paymentMode;
 
 

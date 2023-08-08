@@ -99,6 +99,11 @@ function ProductForm() {
   ));
   // (end) 💥 categories and their sizes 
 
+  const [selectedDeliveryCharge, setSelectedDeliveryCharge] = useState('');
+  const handleDeliveryChange = (e) => {
+    setSelectedDeliveryCharge(e.target.value);
+  };
+
   const [price, setPrice] = useState(0);
   const [oldPrice, setOldPrice] = useState(0);
 
@@ -128,15 +133,16 @@ function ProductForm() {
       setValue('description', currentSelectedProduct.description);
       setValue('price', currentSelectedProduct.price);
       setValue('discountPercentage', currentSelectedProduct.discountPercentage);
-      setValue('stock', currentSelectedProduct.stock);
+      setValue('deliveryCharge', currentSelectedProduct.deliveryCharge);
       setValue('brand', currentSelectedProduct.brand);
-      setValue('category', currentSelectedProduct.category);
-      setValue('label', currentSelectedProduct.label);
       uploadThumbnail(currentSelectedProduct.thumbnail);
       setSelectedSizes(currentSelectedProduct.selectedSizes);
-      uploadImage1(currentSelectedProduct.images[0]);
-      uploadImage2(currentSelectedProduct.images[1]);
-      uploadImage3(currentSelectedProduct.images[2]);
+      uploadImage1(currentSelectedProduct.images[1]);
+      uploadImage2(currentSelectedProduct.images[2]);
+      uploadImage3(currentSelectedProduct.images[3]);
+      setValue('label', currentSelectedProduct.label);
+      setSelectedCategory(currentSelectedProduct.category);
+      setSelectedDeliveryCharge(currentSelectedProduct.deliveryCharge)
 
       const calculatedSellPrice = Math.round(parseInt(oldPrice) - (parseInt(oldPrice) * (parseInt(currentSelectedProduct.discountPercentage) / 100)));
       setPrice(calculatedSellPrice); // Set the calculated selling price to the 'sellPrice' field
@@ -144,7 +150,7 @@ function ProductForm() {
   }, [currentSelectedProduct, params.id, setValue]);
   // (end) 💥 fetch product details for update 💥
 
-  
+
   // (start) 💥 upload images to the firebase 💥
   const [progress, setProgress] = useState(0);
   const [thumbnail, uploadThumbnail] = useState(null);
@@ -230,7 +236,7 @@ function ProductForm() {
         // Filter out null or empty values
         const filteredImageUrls = imageUrls.filter(url => url);
 
-        product.images = filteredImageUrls;
+        product.images = filteredImageUrls; // push the images to DB
 
         product.rating = 0;
         delete product['image1'];
@@ -238,7 +244,6 @@ function ProductForm() {
         delete product['image3'];
 
         product.price = +product.price;
-        product.stock = +product.stock;
         product.discountPercentage = +product.discountPercentage;
 
 
@@ -454,23 +459,27 @@ function ProductForm() {
             </div>
             <div className="sm:col-span-2">
               <label
-                htmlFor="stock"
+                htmlFor="deliveryCharge"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                Stock
+                Delivery charges 📦
               </label>
               <div className="mt-2">
-                <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
-                  <input
-                    type="number"
-                    {...register('stock', {
-                      required: 'stock is required',
-                      min: 0,
-                    })}
-                    id="stock"
-                    className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                  />
-                </div>
+                <select
+                  {...register('deliveryCharge', {
+                    required: 'deliveryCharge is required',
+                  })}
+                  value={selectedDeliveryCharge}
+                  onChange={handleDeliveryChange}
+                >
+                  <option value="">--choose Delivery charges --</option>
+                  <option value={0}>Free</option>
+                  <option value={40}>₹ 40</option>
+                  <option value={60}>₹ 60</option>
+                  <option value={80}>₹ 80</option>
+                  <option value={100}>₹ 100</option>
+                  <option value={120}>₹ 120</option>
+                </select>
               </div>
             </div>
 
@@ -669,13 +678,13 @@ function ProductForm() {
         <button
           type="button"
           className="text-sm font-semibold leading-6 text-gray-900"
-          onClick={()=>navigate(-1)}
+          onClick={() => navigate(-1)}
         >
           Cancel
         </button>
 
         {currentSelectedProduct &&
-          <Button  className='bg-red-400' onClick={handleOpen}>Delete</Button>
+          <Button className='bg-red-400' onClick={handleOpen}>Delete</Button>
         }
 
         <Button
@@ -708,7 +717,7 @@ function ProductForm() {
             />
           </svg>
           <Typography color="red" variant="paragraph">
-           Are you sure! You want to delete this product?
+            Are you sure! You want to delete this product?
           </Typography>
         </DialogBody>
         <DialogFooter className="space-x-2">
@@ -716,7 +725,7 @@ function ProductForm() {
             close
           </Button>
           <Button variant="gradient" color='red' onClick={handleDelete}>
-           Yes! Sure
+            Yes! Sure
           </Button>
         </DialogFooter>
       </Dialog>

@@ -5,7 +5,7 @@ const ProductSchema = mongoose.Schema({
     description: { type: String, required: true },
     price: { type: Number, min: [1, 'wrong min price'], max: [10000, 'wrong max price'] },
     discountPercentage: { type: Number, min: [1, 'wrong min discount'], max: [99, 'wrong max discount'] },
-    stock: { type: Number, min: [0, 'wrong min stock'], default: 0 },
+    deliveryCharge: { type: Number, default: 0 },
     brand: { type: String, required: true },
     label: { type: String },
     category: { type: String, required: true },

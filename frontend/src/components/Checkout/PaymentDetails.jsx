@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { selectBuyNowProduct, selectDeliveryCharges, selectPaymentMode } from '../../Features/checkout/checkoutSlice'
+import { selectBuyNowProduct, selectPaymentMode } from '../../Features/checkout/checkoutSlice'
 import { useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
 import { createOrderAsync } from '../../Features/orders/orderSlice';
@@ -56,11 +56,7 @@ const PaymentDetails = () => {
     const paymentMethod = useSelector(selectPaymentMode);
     const currentOrder = useSelector(selectCurrentOrder);
 
-    // admin will set the delivery charges (default - free)
-    const deliveryCharges = useSelector(selectDeliveryCharges);
-
-    let totalAmount;
-    deliveryCharges === 'Free' ? totalAmount = currentBuyNowProduct.actualPrice : totalAmount = currentBuyNowProduct.actualPrice + deliveryCharges
+    let totalAmount = currentBuyNowProduct.actualPrice + currentBuyNowProduct.deliveryCharge
 
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
     const onCloseHandler = () => {
@@ -68,10 +64,8 @@ const PaymentDetails = () => {
     }
     const onSubmit = (address) => {
 
-        const order = { currentBuyNowProduct, totalAmount, deliveryCharges, paymentMethod, address, status: 'pending' }
+        const order = { currentBuyNowProduct, totalAmount, paymentMethod, address, status: 'pending' }
         dispatch(createOrderAsync(order))
-        //TODO : Redirect to order-success page
-        //TODO : on server change the stock number of items
 
         reset();
         const orderDetails = {
@@ -81,7 +75,6 @@ const PaymentDetails = () => {
             thumbnail: currentBuyNowProduct.thumbnail,
             phone: address.phone,
             email: address.email,
-            deliveryCharges, // TODO: not need to send deliveryCharges; later we're adding deliveryCharges in product details itself
             totalAmount
         }
         handlePayment(orderDetails);
@@ -383,9 +376,9 @@ const PaymentDetails = () => {
                         </div>
                         <div class="flex items-center justify-between">
                             <p class="text-sm font-medium text-gray-900">Delivery Charges</p>
-                            <p class={`font-semibold ${deliveryCharges == 'Free' ? 'text-green-600' : 'text-gray-900'}`}>
+                            <p class={`font-semibold ${currentBuyNowProduct.deliveryCharge == 0 ? 'text-green-600' : 'text-gray-900'}`}>
                                 {
-                                    deliveryCharges == 'Free' ? deliveryCharges : `₹ ${deliveryCharges}`
+                                    currentBuyNowProduct.deliveryCharge == 0 ? "Free" : `₹ ${currentBuyNowProduct.deliveryCharge}`
                                 }
                             </p>
                         </div>
