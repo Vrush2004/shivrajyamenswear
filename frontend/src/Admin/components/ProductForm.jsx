@@ -11,7 +11,11 @@ import {
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { toast,ToastContainer } from 'react-toastify';
+import { toast, ToastContainer } from 'react-toastify';
+import { storage } from '../firebase';
+import { ref, getDownloadURL, uploadBytesResumable, uploadString } from "firebase/storage";
+
+
 const sizes = {
   "t-shirts": ["S", "M", "L", "XL", "XXL"],
   "shirts": ["S", "M", "L", "XL", "XXL"],
@@ -42,6 +46,7 @@ function ProductForm() {
     reset,
     formState: { errors },
   } = useForm();
+
   const categories = useSelector(selectAllCategories);
   const labels = useSelector(selectAllLabels);
   const dispatch = useDispatch();
@@ -92,6 +97,7 @@ function ProductForm() {
     const calculatedSellPrice = Math.round(oldPrice - (oldPrice * (discount / 100)));
     setPrice(calculatedSellPrice); // Set the calculated selling price to the 'sellPrice' field
   };
+
   useEffect(() => {
     if (params.id) {
       dispatch(fetchProductsByIdAsync(params.id));
@@ -102,22 +108,79 @@ function ProductForm() {
 
   useEffect(() => {
     if (currentSelectedProduct && params.id) {
+      // put the old values into the input fields for updating
       setValue('title', currentSelectedProduct.title);
       setValue('description', currentSelectedProduct.description);
       setValue('price', currentSelectedProduct.price);
       setValue('discountPercentage', currentSelectedProduct.discountPercentage);
-      setValue('thumbnail', currentSelectedProduct.thumbnail);
       setValue('stock', currentSelectedProduct.stock);
-      setValue('image1', currentSelectedProduct.images[0]);
-      setValue('image2', currentSelectedProduct.images[1]);
-      setValue('image3', currentSelectedProduct.images[2]);
       setValue('brand', currentSelectedProduct.brand);
       setValue('category', currentSelectedProduct.category);
+      setValue('label', currentSelectedProduct.label);
+      uploadThumbnail(currentSelectedProduct.thumbnail);
+      setSelectedSizes(currentSelectedProduct.selectedSizes);
+      uploadImage1(currentSelectedProduct.images[0]);
+      uploadImage2(currentSelectedProduct.images[1]);
+      uploadImage3(currentSelectedProduct.images[2]);
+
       const calculatedSellPrice = Math.round(parseInt(oldPrice) - (parseInt(oldPrice) * (parseInt(currentSelectedProduct.discountPercentage) / 100)));
       setPrice(calculatedSellPrice); // Set the calculated selling price to the 'sellPrice' field
     }
   }, [currentSelectedProduct, params.id, setValue]);
 
+  // (start) 💥 upload images to the firebase 💥
+  const [progress, setProgress] = useState(0);
+  const [thumbnail, uploadThumbnail] = useState(null);
+  const [image1, uploadImage1] = useState(null);
+  const [image2, uploadImage2] = useState(null);
+  const [image3, uploadImage3] = useState(null);
+  const [fileError, setFileError] = useState(null)
+
+  const uploadFile = async (file, path, setImage) => {
+    setFileError(null);
+    setProgress(0);
+
+    if (!file) return;
+
+    if (file.type !== "image/jpeg" && file.type !== "image/png") {
+      console.log("Only jpg & png files are allowed!");
+      setFileError("Only jpg & png files are allowed!");
+      return;
+    }
+
+    setFileError(null);
+
+    const uniqueFileName = file.name + "_" + new Date();
+    const fileRef = ref(storage, `${path}/${uniqueFileName}`);
+    const uploadTask = uploadBytesResumable(fileRef, file);
+
+    return new Promise((resolve, reject) => {
+      uploadTask.on("state_changed",
+        (snapshot) => {
+          const prog = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+          setProgress(prog)
+        },
+        (error) => {
+          console.log(`error uploading file ${path}`, error);
+          reject(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref)
+            .then((downloadUrl) => {
+              console.log(`file availabele at ${downloadUrl}`);
+              resolve(downloadUrl);
+              setImage(downloadUrl);
+            })
+            .catch((error) => {
+              console.log(`Error getting download URL for ${path}:`, error);
+              reject(error);
+            });
+        }
+      );
+    });
+  }
+
+  // (end) 💥 upload images to the firebase 💥
 
   const handleDelete = () => {
     const product = { ...currentSelectedProduct };
@@ -128,19 +191,23 @@ function ProductForm() {
   return (
     <form
       noValidate
-      onSubmit={handleSubmit((data) => {
+      onSubmit={handleSubmit(async (data) => {
+        data.thumbnail = thumbnail; // thumbnailURL
         const product = { ...data, selectedSizes };
-        console.log(product);
-        product.images = [
-          product.image1,
-          product.image2,
-          product.image3,
-          product.thumbnail,
-        ];
+
+        // Create an array of image URLs
+        const imageUrls = [thumbnail,image1, image2, image3];
+
+        // Filter out null or empty values
+        const filteredImageUrls = imageUrls.filter(url => url);
+
+        product.images = filteredImageUrls;
+
         product.rating = 0;
         delete product['image1'];
         delete product['image2'];
         delete product['image3'];
+
         product.price = +product.price;
         product.stock = +product.stock;
         product.discountPercentage = +product.discountPercentage;
@@ -163,7 +230,6 @@ function ProductForm() {
           });
         } else {
           dispatch(createProductAsync(product));
-          reset();
           toast.success('Product created!', {
             position: "bottom-center",
             autoClose: 1000,
@@ -174,11 +240,18 @@ function ProductForm() {
             progress: undefined,
             theme: "light",
           });
+          reset();
         }
+        uploadThumbnail(null);
+        uploadImage1(null);
+        uploadImage2(null);
+        uploadImage3(null);
+        setSelectedSizes([])
+
       })}
     >
-      <ToastContainer/>
-      <div className="space-y-12 bg-white p-12">
+      <ToastContainer />
+      <div className="space-y-12 bg-white p-6 md:p-12">
         <div className="border-b border-gray-900/10 pb-12">
           <h2 className="text-base font-semibold leading-7 text-gray-900">
             {currentSelectedProduct ? "Update the product" : "Add a Product"}
@@ -283,7 +356,7 @@ function ProductForm() {
 
             <div className="sm:col-span-2">
               <label
-                htmlFor="category"
+                htmlFor="label"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
                 Label
@@ -378,18 +451,25 @@ function ProductForm() {
               >
                 Thumbnail
               </label>
-              <div className="mt-2">
+              <div className="mt-2 flex">
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
-                    type="text"
+                    type="file"
                     {...register('thumbnail', {
-                      required: 'thumbnail is required',
+                      // required: 'thumbnail is required',
                     })}
+                    onChange={(e) => uploadFile(e.target.files[0], "thumbnails", uploadThumbnail)}
                     id="thumbnail"
-                    className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    className="relative m-0 block w-1/2 min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
                   />
                 </div>
+                {
+                  progress === 100 || currentSelectedProduct ? (
+                    <img className='ml-4' width="50px" src={thumbnail} alt="" />
+                  ) : null
+                }
               </div>
+              <p className="text-red-500 text-xs mt-1">{fileError}</p>
             </div>
 
             <div className="sm:col-span-6">
@@ -399,18 +479,24 @@ function ProductForm() {
               >
                 Image 1
               </label>
-              <div className="mt-2">
+              <div className="mt-2 flex">
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
-                    type="text"
+                    type="file"
                     {...register('image1', {
-                      required: 'image1 is required',
                     })}
+                    onChange={(e) => uploadFile(e.target.files[0], "images", uploadImage1)}
                     id="image1"
-                    className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    className="relative m-0 block w-1/2 min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
                   />
                 </div>
+                {
+                  progress == 100 || currentSelectedProduct ? (
+                    <img className='ml-4' width="50px" src={image1} alt="" />
+                  ) : null
+                }
               </div>
+              <p className="text-red-500 text-xs mt-1">{fileError}</p>
             </div>
 
             <div className="sm:col-span-6">
@@ -420,18 +506,24 @@ function ProductForm() {
               >
                 Image 2
               </label>
-              <div className="mt-2">
+              <div className="mt-2 flex">
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
-                    type="text"
+                    type="file"
                     {...register('image2', {
-                      required: 'image is required',
                     })}
                     id="image2"
-                    className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    onChange={(e) => uploadFile(e.target.files[0], "images", uploadImage2)}
+                    className="relative m-0 block w-1/2 min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
                   />
                 </div>
+                {
+                  progress == 100 || currentSelectedProduct ? (
+                    <img className='ml-4' width="50px" src={image2} alt="" />
+                  ) : null
+                }
               </div>
+              <p className="text-red-500 text-xs mt-1">{fileError}</p>
             </div>
 
             <div className="sm:col-span-6">
@@ -441,18 +533,24 @@ function ProductForm() {
               >
                 Image 3
               </label>
-              <div className="mt-2">
+              <div className="mt-2 flex">
                 <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-orange-600 ">
                   <input
-                    type="text"
+                    type="file"
                     {...register('image3', {
-                      required: 'image is required',
                     })}
                     id="image3"
-                    className="block flex-1 border-0 bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                    onChange={(e) => uploadFile(e.target.files[0], "images", uploadImage3)}
+                    className="relative m-0 block w-1/2 min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary"
                   />
                 </div>
+                {
+                  progress == 100 || currentSelectedProduct ? (
+                    <img className='ml-4' width="50px" src={image3} alt="" />
+                  ) : null
+                }
               </div>
+              <p className="text-red-500 text-xs mt-1">{fileError}</p>
             </div>
           </div>
         </div>

@@ -116,7 +116,7 @@ function ProductDetails() {
     return (
         <main className="item">
             <section className="img">
-                <img src={selectedImage || product.images[0]} alt="" className="img-main" />
+                <img src={selectedImage || product.thumbnail} alt="" className="img-main" />
                 <div className="img-btns">
                     {product.images.map((image, index) => (
                         <button
