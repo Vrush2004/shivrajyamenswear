@@ -4,7 +4,8 @@ const controller = require('../controller/controller');
 router.post('/products', controller.createProduct)
     .patch('/products', controller.updateProduct)
     .get('/products', controller.fetchAllProducts)
-    .get('/getSingleProduct', controller.fetchProductById);
+    .get('/getSingleProduct', controller.fetchProductById)
+    .delete('/products',controller.deleteProductById);
 
 router.post('/categories', controller.createCategory)
     .get('/categories', controller.fetchAllCategories);

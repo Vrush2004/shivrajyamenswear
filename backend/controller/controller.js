@@ -77,6 +77,29 @@ exports.fetchProductById = async (req, res) => {
     }
 }
 
+// delete particular product by ID
+exports.deleteProductById = async (req, res) => {
+    try {
+        const { id } = req.query;
+
+        // Check if the provided ID is valid
+        if (!id) {
+            return res.status(400).json({ error: 'Product ID is missing.' });
+        }
+
+        const deletedProduct = await ProductSchema.findByIdAndDelete({_id:id});
+
+        if (!deletedProduct) {
+            return res.status(404).json({ error: 'Product not found.' });
+        }
+
+        res.status(200).json({ message: 'Product deleted successfully.' });
+    } catch (error) {
+        console.error('Error while deleting product:', error);
+        res.status(500).json({ error: 'An error occurred while deleting the product.' });
+    }
+};
+
 // create a new category -- no one can use
 exports.createCategory = async (req, res) => {
     try {
@@ -211,7 +234,7 @@ exports.verifyAdmin = async (req, res) => {
         if (!admin) {
             return res.status(400).json("Invalid credentials! ");
         }
-        if(admin.password != password){
+        if (admin.password != password) {
             return res.status(400).json("Invalid credentials! ");
         }
         res.status(200).send(admin);

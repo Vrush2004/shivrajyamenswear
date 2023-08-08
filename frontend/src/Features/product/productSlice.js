@@ -7,7 +7,7 @@ import {
     fetchProductById
 } from './productApi';
 
-import { createProduct, updateProduct } from '../../Admin/Features/Product/AdminProductApi';
+import { createProduct, updateProduct,deleteProduct } from '../../Admin/Features/Product/AdminProductApi';
 
 const initialState = {
     products: [],
@@ -89,6 +89,14 @@ export const updateProductAsync = createAsyncThunk(
         return response.data;
     }
 );
+
+export const deleteProductAsync = createAsyncThunk(
+    'product/delete',
+    async(id)=>{
+        const response = await deleteProduct(id);
+        return response.data;
+    }
+)
 
 
 // ---------- main slice ------------
@@ -188,6 +196,14 @@ export const productSlice = createSlice({
                     (product) => product.id === action.payload.id
                 );
                 state.products[index] = action.payload;
+            })
+
+            // delete product
+            .addCase(deleteProductAsync.pending, (state) => {
+                state.status = 'loading';
+            })
+            .addCase(deleteProductAsync.fulfilled, (state, action) => {
+                state.status = 'idle';
             });
     }
 })

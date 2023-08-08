@@ -1,12 +1,14 @@
 import { useDispatch, useSelector } from 'react-redux';
 import {
   clearSelectedProduct,
-  createProductAsync,
   fetchProductsByIdAsync,
   selectAllCategories,
   selectAllLabels,
   selectedProduct,
+
+  createProductAsync,
   updateProductAsync,
+  deleteProductAsync
 } from '../../Features/product/productSlice';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
@@ -14,6 +16,15 @@ import { useState, useEffect } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import { storage } from '../firebase';
 import { ref, getDownloadURL, uploadBytesResumable, uploadString } from "firebase/storage";
+import { useNavigate } from 'react-router-dom';
+import {
+  Button,
+  Dialog,
+  DialogHeader,
+  DialogBody,
+  DialogFooter,
+  Typography,
+} from "@material-tailwind/react";
 
 
 const sizes = {
@@ -39,6 +50,8 @@ const sizes = {
 };
 
 function ProductForm() {
+
+  // form related 
   const {
     register,
     handleSubmit,
@@ -47,13 +60,12 @@ function ProductForm() {
     formState: { errors },
   } = useForm();
 
+  // Redux state related
   const categories = useSelector(selectAllCategories);
   const labels = useSelector(selectAllLabels);
   const dispatch = useDispatch();
-  const params = useParams();
-  const currentSelectedProduct = useSelector(selectedProduct);
 
-  // #### categories and their sizes ####
+  // (start) 💥 categories and their sizes 💥
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedSizes, setSelectedSizes] = useState([]);
 
@@ -73,7 +85,6 @@ function ProductForm() {
     });
   };
 
-
   const sizeOptions = selectedCategory && sizes[selectedCategory].map((size) => (
     <label key={size}>
       <input
@@ -86,9 +97,8 @@ function ProductForm() {
       <span className='ml-1'>{size}</span>
     </label>
   ));
-  // #### End💥 categories and their sizes ####
+  // (end) 💥 categories and their sizes 
 
-  // const [sellPrice, setSellPrice] = useState(0);
   const [price, setPrice] = useState(0);
   const [oldPrice, setOldPrice] = useState(0);
 
@@ -97,6 +107,11 @@ function ProductForm() {
     const calculatedSellPrice = Math.round(oldPrice - (oldPrice * (discount / 100)));
     setPrice(calculatedSellPrice); // Set the calculated selling price to the 'sellPrice' field
   };
+
+  // (start) 💥 fetch product details for update 💥
+
+  const currentSelectedProduct = useSelector(selectedProduct);
+  const params = useParams();
 
   useEffect(() => {
     if (params.id) {
@@ -127,7 +142,9 @@ function ProductForm() {
       setPrice(calculatedSellPrice); // Set the calculated selling price to the 'sellPrice' field
     }
   }, [currentSelectedProduct, params.id, setValue]);
+  // (end) 💥 fetch product details for update 💥
 
+  
   // (start) 💥 upload images to the firebase 💥
   const [progress, setProgress] = useState(0);
   const [thumbnail, uploadThumbnail] = useState(null);
@@ -182,21 +199,33 @@ function ProductForm() {
 
   // (end) 💥 upload images to the firebase 💥
 
+
+
+  // (start) 💥 product delete 💥
+
+  const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(!open);
+
   const handleDelete = () => {
-    const product = { ...currentSelectedProduct };
-    product.deleted = true;
-    dispatch(updateProductAsync(product));
+    dispatch(deleteProductAsync(params.id));
+    setOpen(!open);
+    navigate(-1);
   }
+
+  // -------------------------------------------------
 
   return (
     <form
       noValidate
+
+      // submit method of the form 💥
       onSubmit={handleSubmit(async (data) => {
         data.thumbnail = thumbnail; // thumbnailURL
         const product = { ...data, selectedSizes };
 
         // Create an array of image URLs
-        const imageUrls = [thumbnail,image1, image2, image3];
+        const imageUrls = [thumbnail, image1, image2, image3];
 
         // Filter out null or empty values
         const filteredImageUrls = imageUrls.filter(url => url);
@@ -217,7 +246,6 @@ function ProductForm() {
           product.id = params.id;
           product.rating = currentSelectedProduct.rating || 0;
           dispatch(updateProductAsync(product));
-          reset();
           toast.success('Product updated Successfully..!', {
             position: "bottom-center",
             autoClose: 1000,
@@ -228,6 +256,7 @@ function ProductForm() {
             progress: undefined,
             theme: "colored",
           });
+          reset();
         } else {
           dispatch(createProductAsync(product));
           toast.success('Product created!', {
@@ -251,6 +280,7 @@ function ProductForm() {
       })}
     >
       <ToastContainer />
+
       <div className="space-y-12 bg-white p-6 md:p-12">
         <div className="border-b border-gray-900/10 pb-12">
           <h2 className="text-base font-semibold leading-7 text-gray-900">
@@ -639,24 +669,59 @@ function ProductForm() {
         <button
           type="button"
           className="text-sm font-semibold leading-6 text-gray-900"
+          onClick={()=>navigate(-1)}
         >
           Cancel
         </button>
 
-        {currentSelectedProduct && <button
-          onClick={handleDelete}
-          className="rounded-md bg-red-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
-        >
-          Delete
-        </button>}
+        {currentSelectedProduct &&
+          <Button  className='bg-red-400' onClick={handleOpen}>Delete</Button>
+        }
 
-        <button
+        <Button
           type="submit"
-          className="rounded-md bg-orange-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+          // className="rounded-md shadow-2xl bg-orange-600 px-3 py-2 text-sm font-semibold text-white hover:bg-orange-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+          className='bg-orange-600'
         >
-          {currentSelectedProduct ? "Update Product" : "Add product"}
-        </button>
+          {currentSelectedProduct ? "Update" : "Add product"}
+        </Button>
       </div>
+
+      {/* ---------------------------- delete model ----------------------------- */}
+      <Dialog open={open} handler={handleOpen}>
+        <DialogHeader>
+          <Typography variant="h5" color="blue-gray">
+            Your Attention is Required!
+          </Typography>
+        </DialogHeader>
+        <DialogBody divider className="grid place-items-center gap-4">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+            className="h-16 w-16 text-red-500"
+          >
+            <path
+              fillRule="evenodd"
+              d="M5.25 9a6.75 6.75 0 0113.5 0v.75c0 2.123.8 4.057 2.118 5.52a.75.75 0 01-.297 1.206c-1.544.57-3.16.99-4.831 1.243a3.75 3.75 0 11-7.48 0 24.585 24.585 0 01-4.831-1.244.75.75 0 01-.298-1.205A8.217 8.217 0 005.25 9.75V9zm4.502 8.9a2.25 2.25 0 104.496 0 25.057 25.057 0 01-4.496 0z"
+              clipRule="evenodd"
+            />
+          </svg>
+          <Typography color="red" variant="paragraph">
+           Are you sure! You want to delete this product?
+          </Typography>
+        </DialogBody>
+        <DialogFooter className="space-x-2">
+          <Button variant="text" color="blue-gray" onClick={handleOpen}>
+            close
+          </Button>
+          <Button variant="gradient" color='red' onClick={handleDelete}>
+           Yes! Sure
+          </Button>
+        </DialogFooter>
+      </Dialog>
+
+
     </form>
   );
 }

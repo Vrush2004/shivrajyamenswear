@@ -14,7 +14,6 @@ const ProductSchema = mongoose.Schema({
     selectedSizes: { type: [String], required: true },
     discountPrice: { type: Number },
     sellingPrice: { type: Number },
-    deleted: { type: Boolean, default: false },
 },
     { timestamps: true }
 )
