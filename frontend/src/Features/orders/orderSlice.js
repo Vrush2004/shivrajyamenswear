@@ -1,11 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { createOrder, updateOrder, fetchAllOrders } from './ordersApi';
+import { createOrder, updateOrder } from './ordersApi';
 
 const initialState = {
   orders: [],
   status: 'idle',
   currentOrder: null,
-  totalOrders: 0
 };
 
 export const createOrderAsync = createAsyncThunk(
@@ -21,15 +20,6 @@ export const updateOrderAsync = createAsyncThunk(
   'order/updateOrder',
   async (order) => {
     const response = await updateOrder(order);
-    // The value we return becomes the `fulfilled` action payload
-    return response.data;
-  }
-);
-
-export const fetchAllOrdersAsync = createAsyncThunk(
-  'order/fetchAllOrders',
-  async ({ sort, pagination }) => {
-    const response = await fetchAllOrders(sort, pagination);
     // The value we return becomes the `fulfilled` action payload
     return response.data;
   }
@@ -54,15 +44,6 @@ export const orderSlice = createSlice({
         state.orders.push(action.payload);
         state.currentOrder = action.payload;
       })
-      // fetch all orders - for admin 
-      .addCase(fetchAllOrdersAsync.pending, (state) => {
-        state.status = 'loading';
-      })
-      .addCase(fetchAllOrdersAsync.fulfilled, (state, action) => {
-        state.status = 'idle';
-        state.orders = action.payload.orders;
-        state.totalOrders = action.payload.totalOrders;
-      })
       // update the order -- for admin
       .addCase(updateOrderAsync.pending, (state) => {
         state.status = 'loading';
@@ -79,6 +60,5 @@ export const { resetOrder } = orderSlice.actions;
 
 export const selectCurrentOrder = (state) => state.orders.currentOrder;
 export const selectOrders = (state) => state.orders.orders;
-export const selectTotalOrders = (state) => state.orders.totalOrders;
 
 export default orderSlice.reducer;

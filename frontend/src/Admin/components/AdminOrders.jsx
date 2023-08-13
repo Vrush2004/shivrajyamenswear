@@ -1,16 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    fetchAllOrdersAsync,
-    selectOrders,
-    selectTotalOrders,
     updateOrderAsync,
 } from '../../Features/orders/orderSlice';
 import {
     PencilIcon,
-    EyeIcon,
-    ArrowUpIcon,
-    ArrowDownIcon,
 } from '@heroicons/react/24/outline';
 import {
     Button,
@@ -22,8 +16,11 @@ import {
     Chip
 } from "@material-tailwind/react";
 
-import Pagination from './Pagination';
-import FilterOrders from './FilterOrders';
+import FilterOrders from "./FilterOrders"
+import { useGetOrdersWithFilterQuery } from '../Features/orders/adminOrdersApi';
+import { selectFromDate, selectSearch, selectToDate } from '../Features/orders/filterOrderSlice';
+import Loader from "../../components/General/Loader";
+import useDebounce from '../hooks/useDebounce';
 
 const TableRow = ({ order, index, editableOrderId, handleEdit, handleUpdate }) => {
 
@@ -55,6 +52,7 @@ const TableRow = ({ order, index, editableOrderId, handleEdit, handleUpdate }) =
         <tr className={backgroundColor}>
             <td className="px-3 py-4 font-semibold text-gray-900 dark:text-white">{index + 1}</td>
             <td className="px-3 py-4 font-semibold text-gray-900 dark:text-white">{order.id}</td>
+            <td className="px-3 py-4 font-semibold text-gray-900 dark:text-white">{order.createdAt.split('T')[0]}</td>
             <td className="hidden md:block w-24 p-2">
                 <img src={order.currentBuyNowProduct.thumbnail} alt={order.currentBuyNowProduct.title} />
             </td>
@@ -143,13 +141,13 @@ const TableRow = ({ order, index, editableOrderId, handleEdit, handleUpdate }) =
 };
 
 const AdminOrders = () => {
-    const ITEMS_PER_PAGE = 10;
-    const [page, setPage] = useState(1);
     const dispatch = useDispatch();
-    const orders = useSelector(selectOrders);
-    const totalOrders = useSelector(selectTotalOrders);
     const [editableOrderId, setEditableOrderId] = useState(-1);
-    const [sort, setSort] = useState({});
+    const searchTerm = useSelector(selectSearch)
+    const fromDate = useSelector(selectFromDate);
+    const toDate = useSelector(selectToDate);
+
+    const debouncedTerm = useDebounce(searchTerm); // debaounced search query
 
     const handleEdit = (order) => {
         setEditableOrderId(order.id);
@@ -161,20 +159,27 @@ const AdminOrders = () => {
         setEditableOrderId(-1);
     };
 
-    const handlePage = (page) => {
-        setPage(page);
-    };
+    // data from 'http://localhost:8000/api/orders' which returns the lists of orders 
+    const {
+        data: orders,
+        isLoading,
+        isSuccess,
+        isError,
+        error
+    } = useGetOrdersWithFilterQuery({
+        fromDate: fromDate,
+        toDate: toDate,
+        search: debouncedTerm,
+      });
 
-    const handleSort = (sortOption) => {
-        const sort = { _sort: sortOption.sort, _order: sortOption.order };
-        console.log({ sort });
-        setSort(sort);
-    };
+    // Conditionally render based on loading, success, and error states
+    if (isLoading) {
+        return <Loader />
+    }
 
-    useEffect(() => {
-        const pagination = { _page: page, _limit: ITEMS_PER_PAGE };
-        dispatch(fetchAllOrdersAsync({ sort, pagination }));
-    }, [dispatch, sort, page]);
+    if (isError) {
+        return <p>Error: {error.message}</p>;
+    }
 
     return (
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg md-0 md:mx-6 mb-32 md:mb-0 my-10">
@@ -187,6 +192,9 @@ const AdminOrders = () => {
                         </th>
                         <th scope="col" className="px-3 py-3 border">
                             <span className="">Order Id</span>
+                        </th>
+                        <th scope="col" className="px-3 py-3 border">
+                            <span className="">Date</span>
                         </th>
                         <th scope="col" className="hidden md:block px-3 py-3 border">
                             <span className="sr-only">Image</span>
@@ -214,8 +222,11 @@ const AdminOrders = () => {
                         </th>
                     </tr>
                 </thead>
+                    {
+                        orders.length == 0 && <p className='text-center bg-indigo-400 text-white'>No orders for this filter :(</p>
+                    }
                 <tbody>
-                    {orders.map((order, index) => (
+                    {orders.length > 0 && orders.map((order, index) => (
                         <TableRow
                             key={order.id}
                             order={order}
@@ -227,7 +238,6 @@ const AdminOrders = () => {
                     ))}
                 </tbody>
             </table>
-            <Pagination page={page} setPage={setPage} handlePage={handlePage} totalItems={totalOrders} />
 
         </div>
     );

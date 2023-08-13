@@ -193,9 +193,8 @@ exports.fetchAllOrders = async (req, res) => {
     const { search, fromDate, toDate } = req.query;
     let query = {};
 
-    if (fromDate || toDate) {
+    if (fromDate != null) {
         const start = new Date(fromDate);
-        console.log(start);
         const end = new Date(toDate);
         end.setDate(end.getDate() + 1); // Adding 1 day to include orders on the 'toDate'
         query.createdAt = { $gte: start, $lt: end };
