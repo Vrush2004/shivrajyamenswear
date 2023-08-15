@@ -70,7 +70,8 @@ export default function AdminProductList({currentWidth}) {
                                     </h3>
                                     {/* <p className="mt-1 text-sm text-gray-500">{product.color}</p> */}
                                 </div>
-                                <p className="text-sm md:text-lg font-medium text-gray-800">₹{product.price}</p>
+                                <p className="text-sm md:text-lg text-gray-500 mr-1 line-through" style={{fontSize:"10px"}}>₹{product.price}</p>
+                                <p className="text-sm md:text-lg font-medium text-gray-800">₹{ Math.round(product.price - (product.price * (product.discountPercentage / 100)))}</p>
                             </div>
                             <div className="mt-5">
                                 <Link

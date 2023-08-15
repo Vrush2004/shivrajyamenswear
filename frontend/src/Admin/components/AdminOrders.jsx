@@ -55,7 +55,7 @@ const TableRow = ({ order, index, editableOrderId, handleEdit, handleUpdate }) =
     return (
         <tr className={backgroundColor}>
             <td className="px-3 py-4 font-semibold text-gray-900 dark:text-white">{index + 1}</td>
-            <td className="px-3 py-4 font-semibold text-gray-900 dark:text-white">{order.id}</td>
+            <td className="px-3 py-4 font-semibold text-gray-900 dark:text-white">{order.orderId}</td>
             <td className="px-3 py-4 font-semibold text-gray-900 dark:text-white">{order.createdAt.split('T')[0]}</td>
             <td className="hidden md:block w-24 p-2">
                 <img src={order.currentBuyNowProduct.thumbnail} alt={order.currentBuyNowProduct.title} />

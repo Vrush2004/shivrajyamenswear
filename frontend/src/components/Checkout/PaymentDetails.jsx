@@ -281,11 +281,11 @@ const PaymentDetails = () => {
                             <div class="relative">
                                 <input
                                     type="text"
-                                    id="addressline"
-                                    name="addressline"
+                                    id="address"
+                                    name="address"
                                     className={`w-full rounded-md border ${errors.address ? 'border-red-500' : 'border-gray-400'} px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 ${errors.address ? 'focus:border-red-500 focus:ring-red-500' : 'focus:border-blue-500 focus:ring-blue-500'}`}
                                     placeholder="Gondhawani road, ward no: 01"
-                                    {...register("addressline", {
+                                    {...register("address", {
                                         required: "Address is required",
                                         pattern: {
                                             value: /^.{8,}$/,
@@ -299,7 +299,7 @@ const PaymentDetails = () => {
                                     </svg>
                                 </div>
                             </div>
-                            {errors.addressline && <p className="text-red-500 text-xs mt-1">{errors.addressline.message}</p>}
+                            {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address.message}</p>}
                         </div>
                         <div className='mb-6 md:mb-10'>
                             <label for="landmark" class="block text-sm font-medium mb-2">Landmark</label>
