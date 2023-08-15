@@ -4,7 +4,7 @@ import { createOrder, updateOrder } from './ordersApi';
 const initialState = {
   orders: [],
   status: 'idle',
-  currentOrder: null,
+  orderId: "",
 };
 
 export const createOrderAsync = createAsyncThunk(
@@ -29,9 +29,9 @@ export const orderSlice = createSlice({
   name: 'order',
   initialState,
   reducers: {
-    resetOrder: (state) => {
-      state.currentOrder = null;
-    },
+    orderId: (state,action) => {
+      state.orderId = action.payload;
+  }
   },
   extraReducers: (builder) => {
     builder
@@ -42,7 +42,6 @@ export const orderSlice = createSlice({
       .addCase(createOrderAsync.fulfilled, (state, action) => {
         state.status = 'idle';
         state.orders.push(action.payload);
-        state.currentOrder = action.payload;
       })
       // update the order -- for admin
       .addCase(updateOrderAsync.pending, (state) => {
@@ -56,9 +55,8 @@ export const orderSlice = createSlice({
   },
 });
 
-export const { resetOrder } = orderSlice.actions;
+export const { orderId } = orderSlice.actions;
 
-export const selectCurrentOrder = (state) => state.orders.currentOrder;
-export const selectOrders = (state) => state.orders.orders;
+export const selectOrderId = (state) => state.orders.orderId
 
 export default orderSlice.reducer;

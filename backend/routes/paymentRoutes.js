@@ -8,16 +8,16 @@ paymentRoutes.post("/orders", async (req, res) => {
 		const instance = new Razorpay({
 			key_id: process.env.RAZOR_PAY_KEY_ID,
 			key_secret: process.env.RAZOR_PAY_KEY_SECRET,
-		});
-        console.log(req.body.orderDetails);
+		}); 
+        // console.log(req.body.orderDetails);
 		const orderdetails = req.body.orderDetails
 		// receiving product id 
 		const buyNowProduct = await ProductSchema.findOne({_id:orderdetails.id});
 
 		// calculate final Amount of the order including total quantity + price after discount + delivery charges
 		const actualAmount = Math.round(+buyNowProduct.price - (+buyNowProduct.price * (+buyNowProduct.discountPercentage / 100)));
-		const finalAmount = parseInt(( actualAmount * +orderdetails.quantity ) + +orderdetails.deliveryCharges) // TODO: no need to fetch delivery charges from frontend
-
+		const finalAmount = parseInt(( actualAmount * +orderdetails.quantity ) + +buyNowProduct.deliveryCharge) // TODO: no need to fetch delivery charges from frontend
+		// console.log(actualAmount,finalAmount)
 		// ************
 		const options = {
 			amount: finalAmount * 100,

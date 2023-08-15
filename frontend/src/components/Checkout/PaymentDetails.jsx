@@ -1,11 +1,9 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { selectBuyNowProduct, selectPaymentMode } from '../../Features/checkout/checkoutSlice'
 import { useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
-import { createOrderAsync } from '../../Features/orders/orderSlice';
-import { selectCurrentOrder } from '../../Features/orders/orderSlice';
-import { Navigate, useNavigate } from 'react-router-dom';
-import { handlePaymentAsync, initPaymentAsync,orderId } from '../../Features/Payment/paymentSlice';
+import { createOrderAsync,orderId } from '../../Features/orders/orderSlice';
+import { useNavigate } from 'react-router-dom';
 import { baseUrl, RAZOR_PAY_KEY_ID } from '../../../config';
 
 const districtsOfMaharashtra = [
@@ -54,37 +52,40 @@ const PaymentDetails = () => {
 
     const currentBuyNowProduct = useSelector(selectBuyNowProduct);
     const paymentMethod = useSelector(selectPaymentMode);
-    const currentOrder = useSelector(selectCurrentOrder);
 
-    let totalAmount = currentBuyNowProduct.actualPrice + currentBuyNowProduct.deliveryCharge
+    // calculate actucalPrice + deliveryCharge
+    let totalAmount = currentBuyNowProduct.actualPrice + currentBuyNowProduct.deliveryCharge;
 
+    // react hook form
     const { register, handleSubmit, formState: { errors }, reset } = useForm();
+
+    // razorpay payment model
     const onCloseHandler = () => {
         console.log("model closed");
     }
-    const onSubmit = (address) => {
 
-        const order = { currentBuyNowProduct, totalAmount, paymentMethod, address, status: 'pending' }
-        dispatch(createOrderAsync(order))
+    // ** Place Order button **
+    const onSubmit = (formAddressData) => {
 
         reset();
+
+        // send this details to backend to verify payment
         const orderDetails = {
             id: currentBuyNowProduct.id,
             title: currentBuyNowProduct.title,
             quantity: currentBuyNowProduct.quantity,
             thumbnail: currentBuyNowProduct.thumbnail,
-            phone: address.phone,
-            email: address.email,
-            totalAmount
+            phone: formAddressData.phone,
+            email: formAddressData.email,
         }
-        handlePayment(orderDetails);
-        // dispatch(handlePaymentAsync(orderDetails));
-        // const paymentData = useSelector(selectPaymentData);
-        // dispatch(initPaymentAsync(paymentData, orderDetails))
+
+        // call razorpay payment handler
+        // also pass the address information to the function so that it can be use in dispatch(createOrderAsycn())
+        handlePayment(orderDetails,formAddressData);
     }
 
-
-    const initPayment = (data, orderDetails) => {
+    // initiate razorpay payment 
+    const initPayment = (data, orderDetails,formAddressData) => {
         const options = {
             key: RAZOR_PAY_KEY_ID,
             amount: data.amount,
@@ -112,30 +113,46 @@ const PaymentDetails = () => {
                     });
 
                     const verifyData = await verifyResponse.json();
-                    verifyData.paymentSuccess && dispatch(orderId(data.id));
-                    verifyData.paymentSuccess ? navigate(`/order-success`) : navigate('/fdsdd')
-                    console.log(verifyData);
 
-                    // If you want to handle the result of payment verification, you can resolve it here
+                    // if payment verification is successfull
+                    if (verifyData.paymentSuccess) {
+
+                        // save orderId on redux store to display to the user
+                        dispatch(orderId(data.id));
+
+                        const order = {
+                            currentBuyNowProduct,
+                            orderId: data.id,
+                            totalAmount,
+                            paymentMethod,
+                            address:formAddressData,
+                            status: 'pending'
+                        };
+
+                        // create the order
+                        dispatch(createOrderAsync(order));
+
+                        // when payment is successfull navigate to order-success page
+                        navigate(`/order-success`)
+                    } 
+
+
                 } catch (error) {
                     console.log(error);
                     // Handle errors here if necessary
-                    // You might also want to reject the promise here
-                    // reject(error);
                 }
-            }, // handler fun end
+            }, // handler function end
+
         }; // options end
 
         const rzp1 = new window.Razorpay(options);
 
         rzp1.on('payment.success', function (response) {
-            // On successful payment, call the handler function with the success flag
-            options.handler(response, true);
+            options.handler(response, true);  // On successful payment, call the handler function with the success flag
         });
 
         rzp1.on('payment.error', function (response) {
-            // On payment error, call the handler function with the success flag
-            options.handler(response, false);
+            options.handler(response, false);  // On payment error, call the handler function with the success flag
         });
         rzp1.on('razorpay_payment_failed', function () {
             // On payment failed (user closed the modal), call the handler function with the success flag set to false
@@ -146,8 +163,8 @@ const PaymentDetails = () => {
         rzp1.open();
     };
 
-
-    const handlePayment = async (orderDetails) => {
+    // main razorpay function 
+    const handlePayment = async (orderDetails,formAddressData) => {
         try {
             const orderUrl = `${baseUrl}/payment/orders`;
             const response = await fetch(orderUrl, {
@@ -160,18 +177,19 @@ const PaymentDetails = () => {
                 }),
             });
             const data = await response.json();
-            console.log(data);
-            initPayment(data.data, orderDetails);
+            
+            // call the razorpay payment initiater function & pass the orderDetails also
+            initPayment(data.data, orderDetails,formAddressData);
+
         } catch (error) {
             console.log(error);
             throw error; // Rethrow the error to be caught by the thunk
         }
     };
 
-
+// ----------------------------- 
     return (
         <>
-            {/* {currentOrder && <Navigate to={`/order-success/${currentOrder.id}`} replace={true}></Navigate>} */}
             <form onSubmit={handleSubmit(onSubmit)} class="mt-5 mb-10 px-4 pt-8 lg:mt-0" noValidate>
                 <p class="text-xl font-medium">Payment Details</p>
                 <p class="text-gray-400">Complete your order by providing your payment details.</p>
@@ -263,11 +281,11 @@ const PaymentDetails = () => {
                             <div class="relative">
                                 <input
                                     type="text"
-                                    id="address"
-                                    name="address"
+                                    id="addressline"
+                                    name="addressline"
                                     className={`w-full rounded-md border ${errors.address ? 'border-red-500' : 'border-gray-400'} px-4 py-3 pl-11 text-sm shadow-sm outline-none focus:z-10 ${errors.address ? 'focus:border-red-500 focus:ring-red-500' : 'focus:border-blue-500 focus:ring-blue-500'}`}
                                     placeholder="Gondhawani road, ward no: 01"
-                                    {...register("address", {
+                                    {...register("addressline", {
                                         required: "Address is required",
                                         pattern: {
                                             value: /^.{8,}$/,
@@ -281,7 +299,7 @@ const PaymentDetails = () => {
                                     </svg>
                                 </div>
                             </div>
-                            {errors.address && <p className="text-red-500 text-xs mt-1">{errors.address.message}</p>}
+                            {errors.addressline && <p className="text-red-500 text-xs mt-1">{errors.addressline.message}</p>}
                         </div>
                         <div className='mb-6 md:mb-10'>
                             <label for="landmark" class="block text-sm font-medium mb-2">Landmark</label>

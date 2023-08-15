@@ -1,18 +1,9 @@
-import { useEffect } from "react";
-import { Link, Navigate, useParams } from "react-router-dom";
-import { useSelector,useDispatch } from "react-redux";
-import { resetOrder } from "../Features/orders/orderSlice";
-import { selectOrderId } from "../Features/Payment/paymentSlice";
+import { Link, Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectOrderId } from "../Features/orders/orderSlice";
 
 function OrderSuccessPage() {
-    const params = useParams()
-    const dispatch = useDispatch();
     const orderId = useSelector(selectOrderId);
-
-    useEffect(() => {
-        // reset currentOrder
-        dispatch(resetOrder())
-    }, [dispatch])
 
     return (
         <>

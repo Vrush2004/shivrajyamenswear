@@ -4,24 +4,7 @@ const initialState = {
     status: 'idle',
     buyNowItem: [],
     paymentMode:"UPI",
-    shippingInfo:null
 }
-
-export const buyNowAsync = createAsyncThunk(
-    'buyNowThunk',
-    async (item) => {
-        try {
-            let selectedBuyNow = JSON.parse(localStorage.getItem("buyNow")) || [];
-            selectedBuyNow.push(item);
-            localStorage.setItem("buyNow", JSON.stringify(selectedBuyNow));
-            return item;
-        } catch (error) {
-            // Handle any error that may occur during the process
-            console.error('Error occurred while adding to buy now:', error);
-            throw error;
-        }
-    }
-)
 
 const checkoutSlice = createSlice({
     name: 'buyNow',

@@ -3,7 +3,6 @@ import productReducer from './product/productSlice';
 import wishlistReducer from './Wishlist/wishlistSlice';
 import checkoutReducer from './checkout/checkoutSlice';
 import orderReducer from './orders/orderSlice';
-import paymentReducer from "./Payment/paymentSlice";
 import filterOrderReducer from '../Admin/Features/orders/filterOrderSlice';
 import { adminOrdersApi } from '../Admin/Features/orders/adminOrdersApi';
 
@@ -18,7 +17,6 @@ export const store = configureStore({
     checkout: checkoutReducer,
     orders: orderReducer,
     auth: authReducer,
-    payment: paymentReducer,
 
   },
   // Adding the api middleware enables caching, invalidation, polling,
