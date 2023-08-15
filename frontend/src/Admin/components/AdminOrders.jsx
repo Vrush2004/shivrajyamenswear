@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
     updateOrderAsync,
@@ -31,9 +31,13 @@ const TableRow = ({ order, index, editableOrderId, handleEdit, handleUpdate }) =
     const chooseColor = (status) => {
         switch (status) {
             case 'pending':
-                return 'bg-purple-200 text-purple-600';
+                return 'bg-purple-200 text-black';
+            case 'accepted':
+                return 'bg-orange-200 text-orange-800';
             case 'dispatched':
                 return 'bg-yellow-200 text-yellow-600';
+            case 'onTheWay':
+                return 'bg-blue-200 text-blue-800';
             case 'delivered':
                 return 'bg-green-200 text-green-600';
             case 'cancelled':
@@ -63,7 +67,7 @@ const TableRow = ({ order, index, editableOrderId, handleEdit, handleUpdate }) =
                 <Chip color={`${order.paymentMethod == "CASH" ? 'amber' : 'green'}`} className='mx-auto w-full md:w-1/2 text-center' value={order.paymentMethod} />
             </td>
             <td className="px-3 py-4 font-semibold text-gray-900 dark:text-white">
-                ₹ {order.currentBuyNowProduct.price}
+                ₹ {order.totalAmount}
             </td>
             {/* ###### address ###### */}
             <td className="px-3 py-4 text-blue-400 cursor-pointer hover:text-orange-400" onClick={handleOpen}>
@@ -81,9 +85,25 @@ const TableRow = ({ order, index, editableOrderId, handleEdit, handleUpdate }) =
                             >
                                 Product Detail
                             </Typography>
-                            <div className='flex justify-between py-2'>
-                                {order.currentBuyNowProduct.title} 👉  ₹{order.currentBuyNowProduct.price} 👉 {order.paymentMethod}
-                            </div>
+                            <ul className='list-none my-2'>
+                                <li className='mb-2'>
+                                    <b className='font-bold'>Product Name: </b>
+                                    {order.currentBuyNowProduct.title}
+                                </li>
+                                <li className='mb-2'>
+                                    <b className='font-bold'>Selling Price: </b>
+                                    ₹{Math.round(order.currentBuyNowProduct.price - (order.currentBuyNowProduct.price * (order.currentBuyNowProduct.discountPercentage / 100)))}
+                                </li>
+                                <li className='mb-2'>
+                                    <b className='font-bold'>Delivery Charges: </b>
+                                    ₹{order.currentBuyNowProduct.deliveryCharge}
+                                </li>
+                                <li className='mb-2'>
+                                    <b className='font-bold'>Total Amount: </b>
+                                    ₹{order.totalAmount}
+                                </li>
+                            </ul>
+
                         </div>
                         <div>
                             <Typography
@@ -119,7 +139,9 @@ const TableRow = ({ order, index, editableOrderId, handleEdit, handleUpdate }) =
                 {order.id === editableOrderId ? (
                     <select onChange={(e) => handleUpdate(e, order)}>
                         <option value="pending">Pending</option>
+                        <option value="accepted">Accepted</option>
                         <option value="dispatched">Dispatched</option>
+                        <option value="onTheWay">On the way</option>
                         <option value="delivered">Delivered</option>
                         <option value="cancelled">Cancelled</option>
                     </select>
@@ -149,14 +171,20 @@ const AdminOrders = () => {
 
     const debouncedTerm = useDebounce(searchTerm); // debaounced search query
 
+    // Add a state to keep track of updates
+    const [updateCount, setUpdateCount] = useState(0);
+
     const handleEdit = (order) => {
         setEditableOrderId(order.id);
     };
 
-    const handleUpdate = (e, order) => {
+    const handleUpdate = async (e, order) => {
         const updatedOrder = { ...order, status: e.target.value };
-        dispatch(updateOrderAsync(updatedOrder));
+        await dispatch(updateOrderAsync(updatedOrder));
         setEditableOrderId(-1);
+
+        // Increment the update counter to trigger a re-render
+        setUpdateCount(updateCount + 1);
     };
 
     // data from 'http://localhost:8000/api/orders' which returns the lists of orders 
@@ -165,12 +193,17 @@ const AdminOrders = () => {
         isLoading,
         isSuccess,
         isError,
-        error
+        error,
+        refetch
     } = useGetOrdersWithFilterQuery({
         fromDate: fromDate,
         toDate: toDate,
         search: debouncedTerm,
-      });
+    });
+
+    useEffect(() => {
+        refetch();
+    }, [updateCount, dispatch])
 
     // Conditionally render based on loading, success, and error states
     if (isLoading) {
@@ -183,7 +216,7 @@ const AdminOrders = () => {
 
     return (
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg md-0 md:mx-6 mb-32 md:mb-0 my-10">
-            <FilterOrders/>
+            <FilterOrders />
             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-white uppercase bg-orange-500 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
@@ -222,9 +255,9 @@ const AdminOrders = () => {
                         </th>
                     </tr>
                 </thead>
-                    {
-                        orders.length == 0 && <p className='text-center bg-indigo-400 text-white'>No orders for this filter :(</p>
-                    }
+                {
+                    orders.length == 0 && <p className='text-center bg-indigo-400 text-white'>No orders for this filter :(</p>
+                }
                 <tbody>
                     {orders.length > 0 && orders.map((order, index) => (
                         <TableRow
