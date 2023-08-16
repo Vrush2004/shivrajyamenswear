@@ -166,7 +166,6 @@ function ProductForm() {
     if (!file) return;
 
     if (file.type !== "image/jpeg" && file.type !== "image/png") {
-      console.log("Only jpg & png files are allowed!");
       setFileError("Only jpg & png files are allowed!");
       return;
     }
@@ -190,7 +189,6 @@ function ProductForm() {
         () => {
           getDownloadURL(uploadTask.snapshot.ref)
             .then((downloadUrl) => {
-              console.log(`file availabele at ${downloadUrl}`);
               resolve(downloadUrl);
               setImage(downloadUrl);
             })

@@ -9,7 +9,7 @@ const CheckoutPage = () => {
             {/* ----- include header ------- */}
             <Header/>
             
-            <div class="grid sm:px-5 lg:grid-cols-2 lg:px-10 xl:px-16">
+            <div className="grid sm:px-5 lg:grid-cols-2 lg:px-10 xl:px-16">
 
                  {/* ----- include order summary ------- */}
                  <OrderSummary/>

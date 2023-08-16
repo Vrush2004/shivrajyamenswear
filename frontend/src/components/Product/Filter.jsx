@@ -88,7 +88,7 @@ const Filter = () => {
                                                     name={`${section.id}[]`}
                                                     defaultValue={option.value}
                                                     type="checkbox"
-                                                    defaultChecked={option.checked}
+                                                    defaultChecked={selectedCategory === option.value }
                                                     onClick={(e) => handleFilter(e, section, option)}
                                                     className="h-4 w-4 rounded border-gray-300 text-orange-600 focus:ring-orange-500"
                                                 />

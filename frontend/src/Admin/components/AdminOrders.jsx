@@ -61,6 +61,7 @@ const TableRow = ({ order, index, editableOrderId, handleEdit, handleUpdate }) =
                 <img src={order.currentBuyNowProduct.thumbnail} alt={order.currentBuyNowProduct.title} />
             </td>
             <td className="px-2 py-4 font-semibold text-gray-900 dark:text-white">
+                <img className='block md:hidden' src={order.currentBuyNowProduct.thumbnail} alt={order.currentBuyNowProduct.title} />
                 {order.currentBuyNowProduct.title}
             </td>
             <td className="px-3 py-4">
@@ -211,7 +212,7 @@ const AdminOrders = () => {
     }
 
     if (isError) {
-        return <p>Error: {error.message}</p>;
+        return <td>Error: {error.message}</td>;
     }
 
     return (
@@ -256,7 +257,14 @@ const AdminOrders = () => {
                     </tr>
                 </thead>
                 {
-                    orders.length == 0 && <p className='text-center bg-indigo-400 text-white'>No orders for this filter :(</p>
+                    orders.length == 0 &&
+                    <tbody>
+                        <tr>
+                            <td colSpan="10" className="text-center bg-indigo-400 text-white">
+                                No orders for this filter :(
+                            </td>
+                        </tr>
+                    </tbody>
                 }
                 <tbody>
                     {orders.length > 0 && orders.map((order, index) => (

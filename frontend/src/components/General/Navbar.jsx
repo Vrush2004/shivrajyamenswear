@@ -9,9 +9,9 @@ import { selectItems } from '../../Features/Wishlist/wishlistSlice';
 
 const navigation = [
     { name: 'Home', link: '/', current: true },
-    { name: 'Shirts', link: '/category/shirt', current: false },
-    { name: 'Jeans', link: '/category/jeans', current: false },
-    { name: 'T-shirt', link: '/category/tshirt', current: false },
+    { name: 'Shirts', link: '/products', current: false },
+    { name: 'Jeans', link: '/products', current: false },
+    { name: 'T-shirt', link: '/products', current: false },
     { name: 'More', link: '/products', current: false },
 ]
 
@@ -48,9 +48,6 @@ const Navbar = () => {
             {/* Navigational Links (Hidden in Mobile) */}
             <ul className="hidden md:flex md:gap-8 text-lg">
 
-                {/* <li>
-                    <NavLink to="/about" className="text-white hover:text-gray-400">Accessories</NavLink>>
-                </li> */}
                 <li className='mt-5 '>
                     <NavLink to="/wishlist" value="/wishlist" className="text-white hover:text-gray-400 flex relative">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">

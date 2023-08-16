@@ -1,31 +1,15 @@
 import React, { useEffect, useRef } from 'react';
 import bigSale from '../../assets/bigsale.png'
-import Shirt from '../../assets/shirt.jpg';
-import Tshirt from '../../assets/tshirt.jpg';
-import jeans from '../../assets/jeans.jpg';
-import sweatshirt from '../../assets/sweatshirt.jpg';
-import accessories from '../../assets/accessories.jpg';
-import shoes from '../../assets/shoes.jpg';
-import jacket from '../../assets/jackets.jpg';
-import { NavLink } from 'react-router-dom';
+import { NavLink,useNavigate } from 'react-router-dom';
 import { Fade } from "react-awesome-reveal";
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllCategoriesAsync, selectAllCategories } from '../../Features/product/productSlice';
-
-const categories = [
-    { name: "", img: bigSale, link: '/' },
-    { name: "Shirts", img: Shirt, link: '/category/shirt' },
-    { name: "Jeans", img: jeans, link: '/category/jeans' },
-    { name: "T-Shirts", img: Tshirt, link: '/category/tshirt' },
-    { name: "SweatShirt", img: sweatshirt, link: '/category/sweatshirt' },
-    { name: "Accessories", img: accessories, link: '/category/accessories' },
-    { name: "Jacket", img: jacket, link: '/category/jacket' },
-    { name: "Shoes", img: shoes, link: '/category/shoes' },
-];
+import { productCategory ,fetchProductsByFiltersAsync } from '../../Features/product/productSlice';
 
 const Categories = () => {
     const categoryContainerRef = useRef(null);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const newCategories = useSelector(selectAllCategories)
 
     useEffect(()=>{
@@ -42,6 +26,12 @@ const Categories = () => {
         container.scrollLeft += 100; // Adjust the scroll distance as needed
     };
 
+    const navigateToCategory = (label)=>{
+        navigate('/products');
+        dispatch(productCategory(label));
+        dispatch(fetchProductsByFiltersAsync({"category":label}));
+    }
+
     return (
         <div className='category-wrapper px-4 py-6 md:px-16 md:pb-2 md:pt-5'>
             <div className="category-container flex flex-row gap-6 md:gap-12 overflow-x-scroll hide-scrollbar" ref={categoryContainerRef}>
@@ -53,15 +43,15 @@ const Categories = () => {
                     </NavLink>
                 </Fade>
                 {newCategories.map((category, index) => (
-                    <Fade delay={500} direction='left'>
-                        <NavLink to="/products" value={category.value} className="category-box" key={index}>
+                    <Fade delay={500} direction='left' key={index}>
+                        <div  className="category-box"  onClick={()=>navigateToCategory(category.value)}>
                             <div className="image-box w-20 h-20 md:w-32 md:h-32 pixalated">
                                 <img src={category.img} alt={category.value} className='w-full h-full' style={{ borderRadius: '50%' }} />
                             </div>
                             <div className="name text-center mt-2 font-geolatica text-sm md:text-lg">
                                 {category.label}
                             </div>
-                        </NavLink>
+                        </div>
                     </Fade>
                 ))}
             </div>

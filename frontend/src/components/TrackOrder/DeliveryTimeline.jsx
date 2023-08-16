@@ -187,7 +187,7 @@ export default function DeliveryTimeline() {
           {/* ### if level is non zero then display the TimeLineItems according to that level of delivery satus*/}
           <Timeline>
             {trackedOrderFailed ? (
-              <div className="mt-8 text-red-400">{trackedOrderFailed.error}</div>
+              <div className="text-red-400">{trackedOrderFailed.error}</div>
             ) : trackedOrderSuccess ? (
 
               <Timeline>{generateTimelineItems()}</Timeline>

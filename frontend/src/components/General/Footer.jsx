@@ -1,6 +1,7 @@
 import React from 'react'
 import Logo from '../../assets/logo.png'
 import { Link } from 'react-router-dom'
+import { AttentionSeeker  } from "react-awesome-reveal";
 
 const Footer = () => {
     return (
@@ -19,30 +20,30 @@ const Footer = () => {
                             <div className="grid grid-cols-2 grid-flow-row gap-2">
                                 <ul className="text-gray-500 dark:text-gray-400 font-medium">
                                     <li className="mb-4">
-                                        <Link to="/category/shirt" className="hover:underline">Shirts</Link>
+                                        <Link to="/products" className="hover:underline">Shirts</Link>
                                     </li>
                                     <li className="mb-4">
-                                        <Link to="/category/jeans" className="hover:underline">Jeans</Link>
+                                        <Link to="/products" className="hover:underline">Jeans</Link>
                                     </li>
                                     <li className="mb-4">
-                                        <Link to="/category/shoes" className="hover:underline">Shoes</Link>
+                                        <Link to="/prducts" className="hover:underline">Shoes</Link>
                                     </li>
                                     <li className="mb-4">
-                                        <Link to="/category/sweatshirt" className="hover:underline">Sweat Shirt</Link>
+                                        <Link to="/products" className="hover:underline">Sweat Shirt</Link>
                                     </li>
                                 </ul>
                                 <ul className="text-gray-500 dark:text-gray-400 font-medium">
                                     <li className="mb-4">
-                                        <Link to="/category/tshirt" className="hover:underline">T-shirts</Link>
+                                        <Link to="/products" className="hover:underline">T-shirts</Link>
                                     </li>
                                     <li className="mb-4">
-                                        <Link to="/category/cargos" className="hover:underline">Cargos</Link>
+                                        <Link to="/products" className="hover:underline">Cargos</Link>
                                     </li>
                                     <li className="mb-4">
-                                        <Link to="/category/jacket" className="hover:underline">Jacket</Link>
+                                        <Link to="/products" className="hover:underline">Jacket</Link>
                                     </li>
                                     <li className="mb-4">
-                                        <Link to="/category/accessories" className="hover:underline">Accessories</Link>
+                                        <Link to="/products" className="hover:underline">Accessories</Link>
                                     </li>
                                 </ul>
                             </div>
@@ -80,6 +81,7 @@ const Footer = () => {
 
                 <hr className="my-6 border-gray-200 sm:mx-auto dark:border-gray-700 lg:my-8" />
 
+                <AttentionSeeker effect='bounce'>
                 <div className="sm:flex sm:items-center sm:justify-between pb-32 md:pb-0">
                     <span className="flex text-sm text-gray-500 sm:text-center dark:text-gray-400">
                         Made with
@@ -90,6 +92,7 @@ const Footer = () => {
                         by <Link to="https://www.instagram.com/_tahir_shaikh_85" className="hover:underline text-red-500 ml-1 ">Tahir Shaikh</Link>
                     </span>
                 </div>
+                </AttentionSeeker>
 
             </div>
         </footer>

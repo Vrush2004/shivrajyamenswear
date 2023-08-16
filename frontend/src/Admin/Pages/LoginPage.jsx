@@ -15,8 +15,6 @@ export default function LoginPage() {
     formState: { errors },
   } = useForm();
 
-  console.log(errors);
-
   return (
     <>
       {admin && <Navigate to='/admin' replace={true}></Navigate>}

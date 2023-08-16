@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react'
+import { useSelector } from 'react-redux';
 
 import { selectAllProducts, selectedProductCategory } from '../../Features/product/productSlice';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function Allproducts() {
     const newProducts = useSelector(selectAllProducts);
@@ -50,9 +50,9 @@ export default function Allproducts() {
                                 {
                                     product.label &&
                                     <p className='home-page-product-label mt-3 inline-block m-0 uppercase' style={{ fontSize: "10px" }}>
-                                        <p>
+                                        <span>
                                             {product.label == "Featured Product" ? "Featured" : product.label}
-                                        </p>
+                                        </span>
                                     </p>
                                 }
 

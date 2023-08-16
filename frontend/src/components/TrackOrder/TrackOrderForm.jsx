@@ -30,7 +30,6 @@ export default function TrackOrderForm() {
     const handleTrackOrder = async (e) => {
         // Handle the track order functionality here
         e.preventDefault();
-        console.log("Tracking ID:", trackingId);
         dispatch(trackedOrderError(null));
         dispatch(trackedOrderData(null));
 
