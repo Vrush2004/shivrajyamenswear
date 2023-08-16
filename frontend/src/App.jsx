@@ -22,6 +22,8 @@ import AdminPanel from "./Admin/Pages/AdminPanel";
 import AdminProductDetailPage from "./Admin/Pages/AdminProductDetailPage";
 import AdminProductFormPage from "./Admin/Pages/AdminProductFormPage";
 import AdminOrdersPage from "./Admin/Pages/AdminOrdersPage";
+import PrivacyPage from "./Pages/PrivacyPage";
+import TermsPage from "./Pages/TermsPage";
 
 export default function App() {
 
@@ -63,6 +65,9 @@ export default function App() {
         <Route exact path="/track-order" element={<TrackOrderPage currentWidth={width} />}></Route>
         <Route exact path="/wishlist" element={<WishlistPage currentWidth={width} />}></Route>
         <Route exact path="/order-success" element={<OrderSuccessPage />}></Route>
+
+        <Route exact path="/privacypolicy" element={<PrivacyPage />}></Route>
+        <Route exact path="/terms" element={<TermsPage />}></Route>
 
         <Route exact path="/login" element={<LoginPage />}></Route>
         <Route exact path="/admin" element={

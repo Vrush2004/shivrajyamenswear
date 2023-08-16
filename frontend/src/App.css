@@ -524,6 +524,14 @@ section {
   color: var(--grayish-blue);
 }
 
+.privacy-page{
+  background: var(--light-grayish-blue);
+}
+.privacy-page p, li{
+  color: var(--dark-grayish-blue);
+  line-height: 1.5;
+}
+
 @keyframes rotation {
   0% {
       transform: rotate(0deg);

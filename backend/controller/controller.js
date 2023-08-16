@@ -40,11 +40,8 @@ exports.updateProduct = async (req, res) => {
 
 // fetch all products -- for both User & Admin panel
 exports.fetchAllProducts = async (req, res) => {
-    // filter = {"category":["smartphone","laptops"]}
-    // sort = {_sort:"price",_order="desc"}
-    // pagination = {_page:1,_limit=10}
-    // TODO : we have to try with multiple category and brands after change in front-end
-    let query = ProductSchema.find({});
+    
+    let query = ProductSchema.find({}).sort({ createdAt: -1 });
 
     if (req.query.category) {
         query = query.find({ category: req.query.category });
@@ -212,7 +209,7 @@ exports.fetchAllOrders = async (req, res) => {
     }
 
     try {
-        const orders = await OrderSchema.find(query);
+        const orders = await OrderSchema.find(query).sort({ createdAt: -1 });
         res.status(200).json(orders);
     } catch (err) {
         res.status(500).json(err);
