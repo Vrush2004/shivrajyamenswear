@@ -34,13 +34,13 @@ const BottomNav = () => {
                 </button>
                 <button type="button"
                     className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50 dark:hover:bg-gray-800 group"
-                    onClick={() => navigate('/orders')}
+                    onClick={() => navigate('/track-order')}
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke={location.pathname === '/orders' ? "#ff8000" : "currentColor"} className="w-6 h-6 mb-1 text-gray-600">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke={location.pathname === '/track-order' ? "#ff8000" : "currentColor"} className="w-6 h-6 mb-1 text-gray-600">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
                     </svg>
-                    <span to="/orders" value="/orders" className={location.pathname==='/orders'?`${commonClasses} tahir`: `${commonClasses}`}>Orders</span>
+                    <span to="/track-order" value="/track-order" className={location.pathname==='/track-order'?`${commonClasses} tahir`: `${commonClasses}`}>Orders</span>
                 </button>
 
             </div>

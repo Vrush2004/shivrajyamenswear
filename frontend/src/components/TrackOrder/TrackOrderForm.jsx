@@ -11,20 +11,47 @@ import {
     TabPanel,
 } from "@material-tailwind/react";
 import { CreditCardIcon, LockClosedIcon } from "@heroicons/react/24/solid";
-import { Slide, AttentionSeeker,Fade } from "react-awesome-reveal";
+import { Slide, AttentionSeeker, Fade } from "react-awesome-reveal";
 import DeliveryTimeline from "./DeliveryTimeline";
+import { useTrackMyOrderMutation } from "../../Features/trackOrder/trackOrderApi";
+import { useDispatch } from "react-redux";
+import { trackedOrderData, trackedOrderError } from "../../Features/trackOrder/trackOrderSlice";
 
 
 export default function TrackOrderForm() {
+
     const [trackingId, setTrackingId] = useState("");
+    const dispatch = useDispatch();
+    const [trackParsel] = useTrackMyOrderMutation();
 
     const handleTrackingIdChange = (event) => {
         setTrackingId(event.target.value);
     };
-
-    const handleTrackOrder = () => {
+    const handleTrackOrder = async (e) => {
         // Handle the track order functionality here
+        e.preventDefault();
         console.log("Tracking ID:", trackingId);
+        dispatch(trackedOrderError(null));
+        dispatch(trackedOrderData(null));
+
+        if (trackingId.length >= 10) {
+            try {
+
+                let response = await trackParsel({ orderIDorMobile: trackingId })
+
+                if (response.error) {
+                    dispatch(trackedOrderError(response.error.data));
+                }
+                if (response.data) {
+                    dispatch(trackedOrderData(response.data))
+                }
+
+            } catch (error) {
+                console.error("Error tracking order:", error);
+            }
+        }else{
+            dispatch(trackedOrderError({error:"Enter valid orderID or Mobile Number"}));
+        }
     };
 
     return (
@@ -39,14 +66,14 @@ export default function TrackOrderForm() {
                     }}
                 >
                     <Slide direction="left" delay={2000}>
-                        <div className="mb-4 rounded-full border border-white/10 bg-white/10 p-6 text-white">
+                        <div className="mb-3 rounded-full border border-white/10 bg-white/10 p-4 text-white">
                             <svg
                                 xmlns="http://www.w3.org/2000/svg"
                                 fill="none"
                                 viewBox="0 0 24 24"
                                 strokeWidth={2}
                                 stroke="currentColor"
-                                className="w-10 h-10"
+                                className="w-8 h-8"
                             >
                                 <path
                                     strokeLinecap="round"
@@ -56,7 +83,7 @@ export default function TrackOrderForm() {
                             </svg>
                         </div>
                     </Slide>
-                    <Typography variant="h4" color="white">
+                    <Typography variant="h5" color="white">
                         Track Your Order
                     </Typography>
                 </CardHeader>
@@ -64,17 +91,10 @@ export default function TrackOrderForm() {
                     <Tabs value={"card"}>
                         <TabsBody>
                             <TabPanel value="card">
-                                <form className="mt-2 flex flex-col gap-4">
+                                <form className="flex flex-col gap-4">
                                     <div className="mb-6">
-                                        <Typography
-                                            variant="small"
-                                            color="blue-gray"
-                                            className="mb-4 font-medium"
-                                        >
-                                            Tracking Id
-                                        </Typography>
                                         <Input
-                                            label="Enter Tracking Id"
+                                            label="Enter Order Id or Mobile Number"
                                             maxLength={19}
                                             value={trackingId}
                                             onChange={handleTrackingIdChange}
@@ -83,18 +103,19 @@ export default function TrackOrderForm() {
                                             }
                                         />
                                     </div>
-                                        <Button
-                                            size="lg"
-                                            style={{
-                                                backgroundImage:
-                                                    "radial-gradient( circle farthest-corner at 10% 20%,  rgba(255,209,67,1) 0%, rgba(255,145,83,1) 90% )",
-                                                }}
-                                            onClick={handleTrackOrder}
-                                        >
-                                                {/* <AttentionSeeker effect="shake"> */}
+                                    <Button
+                                        size="lg"
+                                        style={{
+                                            backgroundImage:
+                                                "radial-gradient( circle farthest-corner at 10% 20%,  rgba(255,209,67,1) 0%, rgba(255,145,83,1) 90% )",
+                                        }}
+                                        type="submit"
+                                        onClick={handleTrackOrder}
+                                    >
+                                        <AttentionSeeker effect="shake">
                                             Track My Order
-                                    {/* </AttentionSeeker> */}
-                                        </Button>
+                                        </AttentionSeeker>
+                                    </Button>
                                     <Typography
                                         variant="small"
                                         color="gray"
@@ -112,7 +133,7 @@ export default function TrackOrderForm() {
 
 
             {/* ------------------- delivery status --------------------- */}
-            <DeliveryTimeline/>
+            <DeliveryTimeline />
         </div>
     );
 }

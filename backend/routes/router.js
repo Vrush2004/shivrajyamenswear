@@ -16,7 +16,9 @@ router.post('/labels', controller.createLabel)
 router.post('/orders', controller.createOrder)
     .get('/orders', controller.fetchAllOrders)
     .delete('/orders', controller.deleteOrder)
-    .patch('/orders', controller.updateOrder)
+    .patch('/orders', controller.updateOrder);
+
+router.post('/trackorder',controller.trackOrder);
 
 router.post('/auth', controller.verifyAdmin)
 

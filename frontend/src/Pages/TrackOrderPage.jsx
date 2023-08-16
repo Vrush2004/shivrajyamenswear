@@ -2,9 +2,9 @@ import React from 'react'
 import Product_Navbar from "../components/General/Product_Navbar";
 import Navbar from '../components/General/Navbar';
 import Footer from '../components/General/Footer';
-import TrackOrderForm from '../components/Orders/TrackOrderForm';
+import TrackOrderForm from '../components/TrackOrder/TrackOrderForm';
 
-const OrdersPage = ({currentWidth}) => {
+const TrackOrderPage = ({currentWidth}) => {
   return (
     <>
       {
@@ -16,4 +16,4 @@ const OrdersPage = ({currentWidth}) => {
   )
 }
 
-export default OrdersPage
+export default TrackOrderPage

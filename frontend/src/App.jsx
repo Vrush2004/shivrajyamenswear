@@ -8,7 +8,7 @@ import Tagline from "./components/General/Tagline";
 import ProductDetailsPage from "./Pages/ProductDetailsPage";
 import CheckoutPage from "./Pages/CheckoutPage";
 import ScrollToTop from "./components/General/ScrollToTop";
-import OrdersPage from "./Pages/OrdersPage";
+import TrackOrderPage from "./Pages/TrackOrderPage";
 import WishlistPage from "./Pages/WishlistPage";
 import PageNotFound from "./Pages/PageNotFound";
 import OrderSuccessPage from "./Pages/OrderSuccessPage";
@@ -60,7 +60,7 @@ export default function App() {
         <Route exact path="/products" element={<ProductListPage currentWidth={width} />}></Route>
         <Route exact path="/products/:id" element={<ProductDetailsPage currentWidth={width} />}></Route>
         <Route exact path="/checkout" element={<CheckoutPage />}></Route>
-        <Route exact path="/orders" element={<OrdersPage currentWidth={width} />}></Route>
+        <Route exact path="/track-order" element={<TrackOrderPage currentWidth={width} />}></Route>
         <Route exact path="/wishlist" element={<WishlistPage currentWidth={width} />}></Route>
         <Route exact path="/order-success" element={<OrderSuccessPage />}></Route>
 

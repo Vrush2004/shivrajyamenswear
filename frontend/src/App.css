@@ -508,6 +508,22 @@ section {
   left: 50%;
 }
 
+.track-orderDetail{
+  background-color: var(--pale-orange);
+}
+.track-orderDetail .title{
+  color: var(--very-dark-blue);
+}
+.track-orderDetail .brand{
+  color: var(--grayish-blue);
+}
+.track-orderDetail .bold{
+  color: var(--very-dark-blue);
+}
+.track-orderDetail .normal{
+  color: var(--grayish-blue);
+}
+
 @keyframes rotation {
   0% {
       transform: rotate(0deg);
