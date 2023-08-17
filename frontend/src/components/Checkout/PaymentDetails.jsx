@@ -4,9 +4,12 @@ import { useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
 import { createOrderAsync,orderId } from '../../Features/orders/orderSlice';
 import { useNavigate } from 'react-router-dom';
-import { baseUrl, RAZOR_PAY_KEY_ID } from '../../../config';
 import { logEvent } from "firebase/analytics";
 import { analytics } from '../../Admin/firebase';
+
+// environment variables
+const baseUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
+const RAZOR_PAY_KEY_ID = import.meta.env.VITE_REACT_APP_RAZOR_PAY_KEY_ID;
 
 const districtsOfMaharashtra = [
     { value: 'Ahmednagar', label: 'Ahmednagar' },
