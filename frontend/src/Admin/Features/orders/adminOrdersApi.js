@@ -1,5 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { baseUrl } from "../../../../config";
+const baseUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
+
+// get orders with filter (fromDate-toDate & search query)
 
 export const adminOrdersApi = createApi({
     reducerPath: 'adminOrdersApi',

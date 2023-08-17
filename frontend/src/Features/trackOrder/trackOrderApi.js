@@ -1,4 +1,4 @@
-import { baseUrl } from "../../../config";
+const baseUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const trackOrderApi = createApi({

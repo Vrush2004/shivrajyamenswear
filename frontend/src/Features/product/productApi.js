@@ -1,4 +1,4 @@
-import { baseUrl } from "../../../config";
+const baseUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
 
 export function fetchAllProducts() {
     return new Promise(async (resolve) => {
