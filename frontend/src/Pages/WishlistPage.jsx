@@ -1,5 +1,5 @@
 import React from 'react'
-import Wishlist from '../components/Wishlist/wishlist'
+import Wishlist from '../components/Wishlist/Wishlist'
 import ScreenViewTracker from '../ScreenViewTracker'
 
 const WishlistPage = () => {
