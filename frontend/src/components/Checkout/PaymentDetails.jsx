@@ -12,7 +12,7 @@ const districtsOfMaharashtra = [
     { value: 'Ahmednagar', label: 'Ahmednagar' },
     { value: 'Akola', label: 'Akola' },
     { value: 'Amravati', label: 'Amravati' },
-    { value: 'Aurangabad', label: 'Aurangabad' },
+    { value: 'SambhajiNagar (Aurangabad)', label: 'SambhajiNagar (Aurangabad)' },
     { value: 'Beed', label: 'Beed' },
     { value: 'Bhandara', label: 'Bhandara' },
     { value: 'Buldhana', label: 'Buldhana' },

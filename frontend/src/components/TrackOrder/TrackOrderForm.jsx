@@ -93,7 +93,7 @@ export default function TrackOrderForm() {
                                     <div className="mb-6">
                                         <Input
                                             label="Enter Order Id or Mobile Number"
-                                            maxLength={19}
+                                            maxLength={20}
                                             value={trackingId}
                                             onChange={handleTrackingIdChange}
                                             icon={

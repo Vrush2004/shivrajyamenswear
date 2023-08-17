@@ -139,7 +139,7 @@ export default function DeliveryTimeline() {
       return [];
     }
 
-    if(currentStatusIndex == 5){
+    if (currentStatusIndex == 5) {
       return renderTimelineItem(text, level, statusIcon, color)
     }
 
@@ -153,27 +153,30 @@ export default function DeliveryTimeline() {
     });
   };
 
- 
+
 
   return (
     <>
       {trackedOrderSuccess && (
-        <Fade delay={1000} triggerOnce={true}>
-          <div className="track-orderDetail flex mt-10 py-10 px-5 border rounded shadow-xl">
+        <Fade delay={1000}  triggerOnce={true}>
+          <div className="track-orderDetail border rounded shadow-xl mt-10 py-10 px-5 ">
+            <div className="flex">
 
-            <Link to={`/products/${trackedOrderSuccess.id}`}><img className="w-32" src={trackedOrderSuccess.currentBuyNowProduct.thumbnail} alt={trackedOrderSuccess.currentBuyNowProduct.title} /></Link>
+              <Link to={`/products/${trackedOrderSuccess.id}`}><img className="w-32 rounded" src={trackedOrderSuccess.currentBuyNowProduct.thumbnail} alt={trackedOrderSuccess.currentBuyNowProduct.title} /></Link>
 
-            <div className="flex flex-col ml-6 mr-4 text-sm md:text-lg">
-              <Link to={`/products/${trackedOrderSuccess.id}`}><span className="title">{trackedOrderSuccess.currentBuyNowProduct.title} </span> </Link>
-              <span className="brand">{trackedOrderSuccess.currentBuyNowProduct.brand}</span>
-              <div className="flex mt-2 text-sm" >
-                <p className=""><span className="bold">Size</span>:  {trackedOrderSuccess.currentBuyNowProduct.selectedSize}</p>
-                <p className="ml-4"><span className="bold">Quantity</span>: {trackedOrderSuccess.currentBuyNowProduct.quantity}</p>
+              <div className="flex flex-col ml-6 mr-4 text-sm md:text-lg">
+                <Link to={`/products/${trackedOrderSuccess.id}`}><span className="title">{trackedOrderSuccess.currentBuyNowProduct.title} </span> </Link>
+                <span className="brand">{trackedOrderSuccess.currentBuyNowProduct.brand}</span>
+                <div className="flex mt-2 text-sm" >
+                  <p className=""><span className="bold">Size</span>:  {trackedOrderSuccess.currentBuyNowProduct.selectedSize}</p>
+                  <p className="ml-4"><span className="bold">Quantity</span>: {trackedOrderSuccess.currentBuyNowProduct.quantity}</p>
+                </div>
+                <p className="text-sm mt-2 "><span className="text-blue-400">Amount: </span> ₹{trackedOrderSuccess.totalAmount}</p>
               </div>
-              <p className="text-sm mt-2 "><span className="text-blue-400">Amount: </span> ₹{trackedOrderSuccess.totalAmount}</p>
-              <p className="text-sm mt-2"><span className="text-orange-400">Ordered On: </span> {formatdate_createdAt}</p>
-            </div>
 
+            </div>
+            <p className="text-sm mt-7"><span className="text-orange-400">Ordered On:  </span> {formatdate_createdAt}</p>
+            <p className="text-sm mt-2"><span className="text-blue-400">OrderID:  </span> {trackedOrderSuccess.orderId}</p>
           </div>
         </Fade>
       )
