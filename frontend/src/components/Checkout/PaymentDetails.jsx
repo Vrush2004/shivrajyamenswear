@@ -5,6 +5,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { createOrderAsync,orderId } from '../../Features/orders/orderSlice';
 import { useNavigate } from 'react-router-dom';
 import { baseUrl, RAZOR_PAY_KEY_ID } from '../../../config';
+import { logEvent } from "firebase/analytics";
+import { analytics } from '../../Admin/firebase';
 
 const districtsOfMaharashtra = [
     { value: 'Ahmednagar', label: 'Ahmednagar' },
@@ -129,8 +131,12 @@ const PaymentDetails = () => {
                             status: 'pending'
                         };
 
+                        // google analytics
+                        logEvent(analytics, "place_order");
+
                         // create the order
                         dispatch(createOrderAsync(order));
+
 
                         // when payment is successfull navigate to order-success page
                         navigate(`/order-success`)

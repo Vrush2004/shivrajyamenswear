@@ -6,10 +6,13 @@ import Navbar from '../components/General/Navbar'
 import CategoryChips from '../components/Product/CategoryChips'
 import DiscountBanner from '../components/Product/DiscountBanner'
 import Loader from '../components/General/Loader';
+import ScreenViewTracker from '../ScreenViewTracker';
 
 const ProductListPage = ({ currentWidth }) => {
   return (
     <div>
+      {/* google analytics */}
+      <ScreenViewTracker screenName="ProductListPage" />
       {
         currentWidth < 640 ? <Product_Navbar /> : <Navbar />
       }

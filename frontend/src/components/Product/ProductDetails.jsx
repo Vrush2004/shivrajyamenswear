@@ -6,6 +6,8 @@ import { addToWishlistAsync } from '../../Features/Wishlist/wishlistSlice';
 import { toast, ToastContainer } from 'react-toastify';
 import { buyNowProduct } from '../../Features/checkout/checkoutSlice';
 import { AttentionSeeker } from 'react-awesome-reveal';
+import { logEvent } from "firebase/analytics";
+import { analytics } from '../../Admin/firebase';
 
 import 'react-toastify/dist/ReactToastify.min.css';
 import Loader from '../General/Loader';
@@ -72,6 +74,14 @@ function ProductDetails() {
                     progress: undefined,
                     theme: "colored",
                 });
+
+                // google analytics
+                logEvent(analytics, "add_to_wishlist", {
+                    product_id: params.id,
+                    product_name: product.title,
+                    product_price: product.price,
+                  });
+
             } else {
                 toast.error('Product Already in wishlist!', {
                     position: "top-center",
@@ -106,6 +116,13 @@ function ProductDetails() {
             const actualPrice = Math.round(product.price - (product.price * (product.discountPercentage / 100))) * quantity
             dispatch(buyNowProduct({ ...product, quantity, selectedSize, actualPrice }))
             navigate('/checkout?source=product');
+            logEvent(analytics, "begin_checkout", {
+                product_id: params.id,
+                product_name: product.title,
+                product_price:actualPrice,
+                product_size:selectedSize,
+                product_quantity:quantity
+              });
         }
     }
 
