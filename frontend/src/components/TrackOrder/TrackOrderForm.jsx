@@ -10,7 +10,6 @@ import {
     TabsBody,
     TabPanel,
 } from "@material-tailwind/react";
-import { CreditCardIcon, LockClosedIcon } from "@heroicons/react/24/solid";
 import { Slide, AttentionSeeker, Fade } from "react-awesome-reveal";
 import DeliveryTimeline from "./DeliveryTimeline";
 import { useTrackMyOrderMutation } from "../../Features/trackOrder/trackOrderApi";
@@ -48,8 +47,8 @@ export default function TrackOrderForm() {
             } catch (error) {
                 console.error("Error tracking order:", error);
             }
-        }else{
-            dispatch(trackedOrderError({error:"Enter valid orderID or Mobile Number"}));
+        } else {
+            dispatch(trackedOrderError({ error: "Enter valid orderID or Mobile Number" }));
         }
     };
 
@@ -98,7 +97,9 @@ export default function TrackOrderForm() {
                                             value={trackingId}
                                             onChange={handleTrackingIdChange}
                                             icon={
-                                                <CreditCardIcon className="h-5 w-5 text-orange-gray-300" />
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="h-5 w-5 text-orange-gray-300">
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z" />
+                                                </svg>
                                             }
                                         />
                                     </div>
@@ -120,7 +121,11 @@ export default function TrackOrderForm() {
                                         color="gray"
                                         className="mt-2 flex items-center justify-center gap-2 font-normal opacity-60"
                                     >
-                                        <LockClosedIcon className="-mt-0.5 h-4 w-4 capitalize" />{" "}
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="-mt-0.5 h-4 w-4 capitalize">
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
+                                        </svg>
+
+                                        {" "}
                                         Your Package is safe with our delivery Partner
                                     </Typography>
                                 </form>

@@ -1,5 +1,4 @@
-import React, { useState,useRef } from 'react'
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import React, { useState, useRef } from 'react'
 import { Input } from "@material-tailwind/react";
 import { searchContent, fromDate, toDate } from '../Features/orders/filterOrderSlice';
 import { useDispatch } from 'react-redux';
@@ -8,10 +7,10 @@ const FilterOrders = () => {
 
     const dispatch = useDispatch();
 
-    const handleSearch = (e)=>{
+    const handleSearch = (e) => {
         dispatch(searchContent(e.target.value));
     }
-    
+
     const fromDateChange = (e) => {
         dispatch(fromDate(e.target.value));
     }
@@ -21,7 +20,7 @@ const FilterOrders = () => {
     const fromDatePicker = useRef("");
     const toDatePicker = useRef("");
 
-    const resetDateFilter = ()=>{
+    const resetDateFilter = () => {
         dispatch(fromDate(null));
         dispatch(toDate(new Date().toISOString().split('T')[0]));
         fromDatePicker.current.value = "";
@@ -62,7 +61,13 @@ const FilterOrders = () => {
 
             {/* ------------- search ------------- */}
             <div className="w-full md:w-72 mt-6 md:mt-0">
-                <Input label="Search by Product, Name, Mobile, Addr " icon={<MagnifyingGlassIcon className="h-5 w-5" />} onChange={handleSearch} />
+                <Input label="Search by Product, Name, Mobile, Addr "
+                    icon={
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                        </svg>
+                    }
+                    onChange={handleSearch} />
             </div>
         </div>
     )
