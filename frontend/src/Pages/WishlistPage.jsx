@@ -1,5 +1,4 @@
 import React from 'react'
-import Wishlist from '../components/Wishlist/wishlist'
 import ScreenViewTracker from '../ScreenViewTracker'
 import Wishlist from '../components/Wishlist/Wishlist';
 
