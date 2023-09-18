@@ -10,10 +10,6 @@ const CheckoutPage = () => {
             <Header/>
             
             <div className="grid sm:px-5 lg:grid-cols-2 lg:px-10 xl:px-16">
-
-                 {/* ----- include order summary ------- */}
-                 <OrderSummary/>
-                 
                  {/* ----- include payment details ------- */}
                  <PaymentDetails/>
             </div>

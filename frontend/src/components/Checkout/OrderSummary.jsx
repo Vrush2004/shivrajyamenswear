@@ -36,10 +36,10 @@ const OrderSummary = () => {
 
 
     return (
-        <div className="px-4 pt-8" style={{ background: "var(--light-grayish-blue)" }}>
+        <div className="px-4 pt-4" style={{ background: "var(--light-grayish-blue)" }}>
             <p className="text-xl font-medium">Order Summary</p>
             <p className="text-gray-400">Check your items. And select a suitable shipping method.</p>
-            <div className="mt-8 space-y-3 rounded-lg border bg-white px-2 py-4 sm:px-6">
+            <div className="mt-4 space-y-3 rounded-lg border bg-white px-2 py-4 sm:px-6">
 
                 <div className="flex flex-col rounded-lg bg-white sm:flex-row">
                     <img className="m-2 h-24 w-28 rounded-md border object-cover object-center" src={buyNowProduct.thumbnail} alt="" />

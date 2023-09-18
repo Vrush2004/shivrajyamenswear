@@ -2,10 +2,11 @@ import React from 'react'
 import { selectBuyNowProduct, selectPaymentMode } from '../../Features/checkout/checkoutSlice'
 import { useForm } from 'react-hook-form';
 import { useSelector, useDispatch } from 'react-redux';
-import { createOrderAsync,orderId } from '../../Features/orders/orderSlice';
+import { createOrderAsync, orderId } from '../../Features/orders/orderSlice';
 import { useNavigate } from 'react-router-dom';
 import { logEvent } from "firebase/analytics";
 import { analytics } from '../../Admin/firebase';
+import OrderSummary from './OrderSummary';
 
 // environment variables
 const baseUrl = import.meta.env.VITE_REACT_APP_BASE_URL;
@@ -86,11 +87,11 @@ const PaymentDetails = () => {
 
         // call razorpay payment handler
         // also pass the address information to the function so that it can be use in dispatch(createOrderAsycn())
-        handlePayment(orderDetails,formAddressData);
+        handlePayment(orderDetails, formAddressData);
     }
 
     // initiate razorpay payment 
-    const initPayment = (data, orderDetails,formAddressData) => {
+    const initPayment = (data, orderDetails, formAddressData) => {
         const options = {
             key: RAZOR_PAY_KEY_ID,
             amount: data.amount,
@@ -130,7 +131,7 @@ const PaymentDetails = () => {
                             orderId: data.id,
                             totalAmount,
                             paymentMethod,
-                            address:formAddressData,
+                            address: formAddressData,
                             status: 'pending'
                         };
 
@@ -143,7 +144,7 @@ const PaymentDetails = () => {
 
                         // when payment is successfull navigate to order-success page
                         navigate(`/order-success`)
-                    } 
+                    }
 
 
                 } catch (error) {
@@ -173,7 +174,7 @@ const PaymentDetails = () => {
     };
 
     // main razorpay function 
-    const handlePayment = async (orderDetails,formAddressData) => {
+    const handlePayment = async (orderDetails, formAddressData) => {
         try {
             const orderUrl = `${baseUrl}/payment/orders`;
             const response = await fetch(orderUrl, {
@@ -186,9 +187,9 @@ const PaymentDetails = () => {
                 }),
             });
             const data = await response.json();
-            
+
             // call the razorpay payment initiater function & pass the orderDetails also
-            initPayment(data.data, orderDetails,formAddressData);
+            initPayment(data.data, orderDetails, formAddressData);
 
         } catch (error) {
             console.log(error);
@@ -196,7 +197,7 @@ const PaymentDetails = () => {
         }
     };
 
-// ----------------------------- 
+    // ----------------------------- 
     return (
         <>
             <form onSubmit={handleSubmit(onSubmit)} className="mt-5 mb-10 px-4 pt-8 lg:mt-0" noValidate>
@@ -395,6 +396,9 @@ const PaymentDetails = () => {
                         </div>
                     </div>
 
+                    {/* ----- include order summary ------- */}
+                    <OrderSummary />
+
                     {/* <!-- Total --> */}
                     <div className="mt-6 border-t border-b py-2">
                         <div className="flex items-center justify-between">
@@ -415,6 +419,7 @@ const PaymentDetails = () => {
                         <p className="text-2xl font-semibold text-gray-900">₹ {totalAmount}</p>
                     </div>
                 </div>
+
                 <button className="mt-4 mb-8 w-full rounded-md bg-gray-900 px-6 py-3 font-medium text-white">Place Order</button>
             </form>
         </>
