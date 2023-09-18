@@ -1,5 +1,4 @@
 import React, { useEffect, useRef } from 'react';
-import bigSale from '../../assets/bigsale.png'
 import { NavLink,useNavigate } from 'react-router-dom';
 import { Fade } from "react-awesome-reveal";
 import { useDispatch, useSelector } from 'react-redux';
@@ -38,7 +37,7 @@ const Categories = () => {
                 <Fade delay={500} direction='left'>
                     <NavLink to="/" value="/" className="category-box">
                         <div className="image-box w-20 h-20 md:w-32 md:h-32 pixalated">
-                            <img src={bigSale} alt="shirts" className='w-full h-full' style={{ borderRadius: '50%' }} />
+                            <img src="https://firebasestorage.googleapis.com/v0/b/shivrajyamenswear.appspot.com/o/banner%2Fbigsale.png?alt=media&token=fc9f0c93-37ce-42d8-83eb-6a8e5b5d6168" alt="shirts" className='w-full h-full' style={{ borderRadius: '50%' }} />
                         </div>
                     </NavLink>
                 </Fade>

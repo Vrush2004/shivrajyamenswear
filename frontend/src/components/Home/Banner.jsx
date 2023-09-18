@@ -28,6 +28,7 @@ const Banner = ({ images }) => {
             key={index}
             alt="image 1"
             className="h-full w-full object-cover"
+            loading='lazy'
           />
         ))
       }

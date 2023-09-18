@@ -1,7 +1,4 @@
 import React from 'react';
-import Logo from '../../assets/logo.png'
-import Maharaj from '../../assets/maharaj2.png'
-import Rajmudra from '../../assets/rajmudra.png';
 import Search from './Search';
 import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -25,7 +22,7 @@ const Navbar = () => {
         <nav className="flex items-center justify-between  py-2 lg:py-3  bg-black text-white sticky top-0 z-10">
             {/* Left Logo */}
             <div>
-                <img src={Maharaj} alt="Left Logo" className="h-16 lg:h-20 ml-2 lg:ml-8" />
+                <img src="https://firebasestorage.googleapis.com/v0/b/shivrajyamenswear.appspot.com/o/banner%2Fmaharaj2.png?alt=media&token=fbee43dc-a6c0-4b8b-a418-50eb17d6c012" alt="Left Logo" className="h-16 lg:h-20 ml-2 lg:ml-8" />
             </div>
 
             {/* Navigational Links (Hidden in Mobile) */}
@@ -42,7 +39,7 @@ const Navbar = () => {
 
             {/* Center Logo */}
             <div>
-                <img src={Logo} alt="Center Logo" className="w-28 lg:w-40 mx-4" />
+                <img src="https://firebasestorage.googleapis.com/v0/b/shivrajyamenswear.appspot.com/o/banner%2Flogo.png?alt=media&token=03c7de96-e4c8-41db-859a-cc5022e4e88d" alt="Center Logo" className="w-28 lg:w-40 mx-4" />
             </div>
 
             {/* Navigational Links (Hidden in Mobile) */}
@@ -75,7 +72,7 @@ const Navbar = () => {
 
             {/* Right Logo */}
             <div>
-                <img src={Rajmudra} alt="Right Logo" className="h-16 lg:h-20 mr-2 lg:mr-8" />
+                <img src="https://firebasestorage.googleapis.com/v0/b/shivrajyamenswear.appspot.com/o/banner%2Frajmudra.png?alt=media&token=fc145868-bc20-4562-b319-c0708118b5d7" alt="Right Logo" className="h-16 lg:h-20 mr-2 lg:mr-8" />
             </div>
         </nav>
     );

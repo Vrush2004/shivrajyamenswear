@@ -140,7 +140,7 @@ function ProductDetails() {
                             className={`img-btn`}
                             key={index}
                         >
-                            <img src={image} alt="shoe product image" className="img-btn__img" onClick={() => handleImageClick(image)} />
+                            <img src={image} loading='lazy' alt="shoe product image" className="img-btn__img" onClick={() => handleImageClick(image)} />
                         </button>
                     ))}
                 </div>
